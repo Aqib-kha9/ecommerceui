@@ -172,7 +172,13 @@ export default function CheckoutPage() {
                   {cartItems.map(item => (
                     <div key={item.id} className="flex items-center gap-4">
                       <div className="relative w-16 h-16 rounded-2xl overflow-hidden bg-slate-50 dark:bg-slate-800 shrink-0 border border-slate-100 dark:border-white/5 shadow-sm">
-                        <Image src={item.image} alt={item.name} fill className="object-cover" sizes="64px" />
+                        <Image 
+                          src={item.image || (item.images && item.images[0]) || "https://images.unsplash.com/photo-1604719312563-8912e9223c6a?q=80&w=800"} 
+                          alt={item.name} 
+                          fill 
+                          className="object-cover" 
+                          sizes="64px" 
+                        />
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-black text-slate-900 dark:text-white line-clamp-1">{item.name}</p>
@@ -210,7 +216,13 @@ export default function CheckoutPage() {
                 {cartItems.map(item => (
                   <div key={item.id} className="flex items-center gap-4">
                     <div className="relative w-12 h-12 rounded-xl overflow-hidden bg-slate-50 dark:bg-slate-800 shrink-0 border border-slate-100 dark:border-white/5">
-                      <Image src={item.image} alt={item.name} fill className="object-cover" sizes="48px" />
+                      <Image 
+                        src={item.image || (item.images && item.images[0]) || "https://images.unsplash.com/photo-1604719312563-8912e9223c6a?q=80&w=800"} 
+                        alt={item.name} 
+                        fill 
+                        className="object-cover" 
+                        sizes="48px" 
+                      />
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-xs font-bold text-slate-900 dark:text-white line-clamp-1">{item.name}</p>

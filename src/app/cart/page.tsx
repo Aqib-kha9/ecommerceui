@@ -61,7 +61,13 @@ export default function CartPage() {
                   className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-white/5 rounded-3xl p-6 flex gap-6 shadow-sm group hover:shadow-xl transition-all"
                 >
                   <div className="relative w-24 h-24 rounded-2xl overflow-hidden bg-slate-50 dark:bg-slate-800 shrink-0 border border-slate-100 dark:border-white/5">
-                    <Image src={item.image} alt={item.name} fill className="object-cover group-hover:scale-110 transition-transform duration-500" sizes="96px" />
+                    <Image 
+                      src={item.image || (item.images && item.images[0]) || "https://images.unsplash.com/photo-1604719312563-8912e9223c6a?q=80&w=800"} 
+                      alt={item.name} 
+                      fill 
+                      className="object-cover group-hover:scale-110 transition-transform duration-500" 
+                      sizes="96px" 
+                    />
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-start justify-between gap-4 mb-2">

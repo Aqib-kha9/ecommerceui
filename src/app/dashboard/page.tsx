@@ -119,7 +119,13 @@ export default function DashboardPage() {
                   {orders.map(order => (
                     <div key={order.id} className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-white/5 rounded-3xl p-6 flex gap-6 shadow-sm hover:shadow-xl hover:shadow-slate-200/50 dark:hover:shadow-none transition-all group">
                       <div className="relative w-20 h-20 rounded-2xl overflow-hidden bg-slate-50 dark:bg-slate-800 shrink-0 border border-slate-100 dark:border-white/5">
-                        <Image src={order.image} alt={order.product} fill className="object-cover group-hover:scale-110 transition-transform duration-500" sizes="80px" />
+                        <Image 
+                          src={order.image || "https://images.unsplash.com/photo-1542838132-92c53300491e?q=80&w=800"} 
+                          alt={order.product} 
+                          fill 
+                          className="object-cover group-hover:scale-110 transition-transform duration-500" 
+                          sizes="80px" 
+                        />
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-start justify-between gap-4 mb-2">
@@ -148,7 +154,13 @@ export default function DashboardPage() {
                   {wishlist.map(product => (
                     <div key={product.id} className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-white/5 rounded-3xl p-5 flex gap-5 shadow-sm hover:shadow-xl transition-all group">
                       <div className="relative w-24 h-24 rounded-2xl overflow-hidden bg-slate-50 dark:bg-slate-800 shrink-0 border border-slate-100 dark:border-white/5">
-                        <Image src={product.image} alt={product.name} fill className="object-cover group-hover:scale-110 transition-transform duration-500" sizes="96px" />
+                        <Image 
+                          src={product.image || (product.images && product.images[0]) || "https://images.unsplash.com/photo-1604719312563-8912e9223c6a?q=80&w=800"} 
+                          alt={product.name} 
+                          fill 
+                          className="object-cover group-hover:scale-110 transition-transform duration-500" 
+                          sizes="96px" 
+                        />
                       </div>
                       <div className="flex-1 min-w-0 flex flex-col justify-center">
                         <Link href={`/products/${product.id}`} className="text-sm font-black text-slate-900 dark:text-white hover:text-primary line-clamp-1 mb-1 tracking-tight">

@@ -63,7 +63,7 @@ export default async function ProductDetailPage({
           <div className="space-y-4">
             <div className="relative aspect-square rounded-3xl overflow-hidden bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-white/5 shadow-xl">
               <Image
-                src={product.image}
+                src={product.image || product.images?.[0] || "https://images.unsplash.com/photo-1542838132-92c53300491e?q=80&w=800"}
                 alt={product.name}
                 fill
                 className="object-cover"
@@ -83,9 +83,9 @@ export default async function ProductDetailPage({
             </div>
             {/* Thumbnail row */}
             <div className="flex gap-3">
-              {[product.image, product.image, product.image].map((img, i) => (
+              {[product.image || product.images?.[0], product.images?.[1] || product.image, product.images?.[2] || product.image].filter(Boolean).map((img, i) => (
                 <div key={i} className={`relative w-20 h-20 rounded-xl overflow-hidden bg-slate-50 dark:bg-slate-800 border-2 cursor-pointer transition-all ${i === 0 ? "border-primary shadow-lg shadow-primary/10" : "border-slate-100 dark:border-slate-700 hover:border-primary/30 transform hover:scale-105"}`}>
-                  <Image src={img} alt="" fill className="object-cover" sizes="80px" />
+                  <Image src={img as string} alt="" fill className="object-cover" sizes="80px" />
                 </div>
               ))}
             </div>

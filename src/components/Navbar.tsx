@@ -106,8 +106,8 @@ export default function Navbar() {
 
           {/* Logo */}
           <Link href="/" className="flex items-center gap-3 shrink-0 group">
-            <div className="w-10 h-10 rounded-xl bg-[var(--primary-gradient)] flex items-center justify-center shadow-lg shadow-primary/20 group-hover:scale-110 transition-all">
-              <Store className="w-6 h-6 text-white" />
+            <div className="w-10 h-10 rounded-xl  flex items-center justify-center group-hover:scale-110 transition-all">
+              <Store className="w-6 h-6 " />
             </div>
             <span className="font-black text-xl md:text-2xl text-slate-950 dark:text-white tracking-tighter uppercase">
               Bazaar<span className="text-primary italic">Hub</span>
@@ -125,11 +125,13 @@ export default function Navbar() {
           <div className="flex items-center gap-2 ml-auto">
             {/* Language Selector */}
             <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="hidden sm:flex items-center gap-1 text-slate-600 dark:text-slate-300 font-black tracking-widest text-[11px] hover:bg-primary/5 hover:text-primary rounded-xl h-11 px-3 transition-all">
-                  EN <ChevronDown className="w-3 h-3" />
-                </Button>
-              </DropdownMenuTrigger>
+              <DropdownMenuTrigger
+                render={
+                  <Button variant="ghost" className="hidden sm:flex items-center gap-1 text-slate-600 dark:text-slate-300 font-black tracking-widest text-[11px] hover:bg-primary/5 hover:text-primary rounded-xl h-11 px-3 transition-all">
+                    EN <ChevronDown className="w-3 h-3" />
+                  </Button>
+                }
+              />
               <DropdownMenuContent align="end" className="w-32 bg-white dark:bg-slate-900 border-slate-200 dark:border-white/10 rounded-2xl shadow-xl p-1">
                 <DropdownMenuItem className="text-xs font-bold cursor-pointer hover:bg-primary/5 hover:text-primary transition-all rounded-xl py-2.5 px-3">English (EN)</DropdownMenuItem>
                 <DropdownMenuItem className="text-xs font-bold cursor-pointer hover:bg-primary/5 hover:text-primary transition-all rounded-xl py-2.5 px-3">हिंदी (HI)</DropdownMenuItem>
