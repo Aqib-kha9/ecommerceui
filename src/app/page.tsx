@@ -476,7 +476,7 @@ export default function HomePage() {
               {/* Right Media - LARGE TOP-ONLY OVERFLOW */}
               <div className="flex-1 relative h-full w-full pointer-events-none min-h-[300px] md:min-h-0 z-30">
                 <div className="absolute inset-x-0 top-[-40%] bottom-[5%] flex items-end justify-center md:justify-end">
-                  <div className="relative w-[180%] h-[140%] md:w-[200%] md:h-[160%] transform rotate-3 group-hover:rotate-0 transition-all duration-1000 ease-out">
+                  <div className="relative w-[140%] h-[120%] md:w-[160%] md:h-[120%] transform rotate-3 group-hover:rotate-0 transition-all duration-1000 ease-out">
                     <Image
                       src="/front-view-back-school-concept-with-copy-space__2_.png"
                       alt="Premium School Supplies"
