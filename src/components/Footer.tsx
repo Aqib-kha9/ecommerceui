@@ -69,7 +69,7 @@ export default function Footer() {
                 <Store className="w-5 h-5 text-white" />
               </div>
               <span className="font-black text-2xl text-slate-900 dark:text-white tracking-tighter uppercase">
-                Bazaar<span className="text-primary">Hub</span>
+                Ayur<span className="text-primary">Pooja</span>
               </span>
             </Link>
             <p className="text-sm font-medium leading-relaxed mb-8 max-w-xs text-slate-500 dark:text-slate-400">
@@ -119,7 +119,7 @@ export default function Footer() {
       <div className="border-t border-slate-100 dark:border-white/5">
         <div className="container mx-auto px-4 py-8 flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="flex flex-col md:flex-row items-center gap-6 text-[10px] font-black uppercase tracking-[0.2em]">
-            <p className="text-slate-400 dark:text-slate-600 text-center md:text-left">© 2024 BazaarHub. All rights reserved.</p>
+            <p className="text-slate-400 dark:text-slate-600 text-center md:text-left">© 2024 Ayur Pooja. All rights reserved.</p>
             <div className="flex gap-8">
               <Link href="#" className="text-slate-400 dark:text-slate-600 hover:text-primary transition-colors">Privacy Policy</Link>
               <Link href="#" className="text-slate-400 dark:text-slate-600 hover:text-primary transition-colors">Terms of Service</Link>

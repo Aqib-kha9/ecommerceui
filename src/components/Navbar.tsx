@@ -38,19 +38,19 @@ import { cn } from "@/lib/utils";
 import MegaMenu from "./MegaMenu";
 
 const navLinks = [
-  { label: "Beverages", href: "/products?category=Beverages" },
   { label: "Groceries", href: "/products?category=Groceries" },
+  { label: "Beauty", href: "/products?category=Beauty" },
   { label: "Personal Care", href: "/products?category=PersonalCare" },
   { label: "Household", href: "/products?category=Household" },
-  { label: "Beauty", href: "/products?category=Beauty" },
+  { label: "Organic", href: "/products?category=Organic" },
   { label: "Baby Care", href: "/products?category=Baby" },
-  { label: "Pet Care", href: "/products?category=Pets" },
   { label: "Pharmacy", href: "/products?category=Pharmacy" },
 ];
 
 export default function Navbar() {
   const { searchQuery, setSearchQuery, isHeroSearchVisible, setIsHeroSearchVisible } = useSearch();
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
+  const [deliveryMode, setDeliveryMode] = useState<"fast" | "scheduled">("fast");
 
   // setup scroll listener
   useEffect(() => {
@@ -68,7 +68,7 @@ export default function Navbar() {
       className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur-md"
       onMouseLeave={() => setActiveCategory(null)}
     >
-      <div className="container mx-auto px-4 lg:px-8">
+      <div className="container mx-auto px-2 lg:px-2">
         <div 
           className="flex h-16 md:h-18 items-center gap-4"
           onMouseEnter={() => setActiveCategory(null)}
@@ -87,7 +87,7 @@ export default function Navbar() {
                 <div className="w-10 h-10 rounded-xl bg-[var(--primary-gradient)] flex items-center justify-center shadow-lg shadow-primary/30">
                   <Store className="w-6 h-6 text-white" />
                 </div>
-                <span className="font-black text-2xl text-white tracking-tighter uppercase">BazaarHub</span>
+                <span className="font-black text-2xl text-white tracking-tighter uppercase">Ayur Pooja</span>
               </div>
               <nav className="flex flex-col gap-2">
                 {navLinks.map((link) => (
@@ -110,15 +110,51 @@ export default function Navbar() {
               <Store className="w-6 h-6 " />
             </div>
             <span className="font-black text-xl md:text-2xl text-slate-950 dark:text-white tracking-tighter uppercase">
-              Bazaar<span className="text-primary italic">Hub</span>
+              Ayur<span className="text-primary italic">Pooja</span>
             </span>
           </Link>
 
           {/* Unified Shared Element Sticky Search Bar */}
-          <div className="flex-1 max-w-2xl hidden md:flex items-center relative px-4">
+          <div className="flex-1 max-w-2xl hidden md:flex items-center relative px-4 gap-4">
             {!isHeroSearchVisible && (
               <MainSearchBar variant="navbar" />
             )}
+
+            {/* Feature-Focused Delivery Toggle */}
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => setDeliveryMode(deliveryMode === "fast" ? "scheduled" : "fast")}
+                className={cn(
+                  "relative flex items-center h-8 rounded-full px-3 transition-all duration-500 border group overflow-hidden",
+                  deliveryMode === "fast" 
+                    ? "bg-primary border-primary text-white shadow-lg shadow-primary/25" 
+                    : "bg-white dark:bg-slate-900 border-slate-200 dark:border-white/10 text-slate-400 hover:border-primary/30 hover:text-slate-600 dark:hover:text-slate-200"
+                )}
+              >
+                {/* Background Glow for Active State */}
+                {deliveryMode === "fast" && (
+                  <motion.div 
+                    layoutId="glow"
+                    className="absolute inset-0 bg-[var(--primary-gradient)] opacity-100"
+                  />
+                )}
+
+                <div className="relative z-10 flex items-center gap-2">
+                  <div className={cn(
+                    "w-1.5 h-1.5 rounded-full transition-all duration-500",
+                    deliveryMode === "fast" ? "bg-white animate-pulse" : "bg-slate-300 dark:bg-slate-600"
+                  )} />
+                  <span className="text-[10px] font-black uppercase tracking-[0.1em]">
+                    30 Mins Delivery
+                  </span>
+                </div>
+
+                {/* Performance Ring */}
+                {deliveryMode === "fast" && (
+                  <span className="absolute inset-0 rounded-full border-2 border-white/20 animate-pulse pointer-events-none" />
+                )}
+              </button>
+            </div>
           </div>
 
           {/* Right Actions */}

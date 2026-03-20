@@ -18,9 +18,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "BazaarHub — Premium FMCG & Daily Essentials Marketplace",
+  title: "Ayur Pooja — Premium FMCG & Daily Essentials Marketplace",
   description:
-    "Experience the finest selection of farm-fresh groceries, premium personal care, and daily staples. BazaarHub brings quality and convenience to your doorstep with a premium touch.",
+    "Experience the finest selection of farm-fresh groceries, premium personal care, and daily staples. Ayur Pooja brings quality and convenience to your doorstep with a premium touch.",
 };
 
 export default function RootLayout({

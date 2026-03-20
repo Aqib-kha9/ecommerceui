@@ -47,7 +47,7 @@ export default function HomePage() {
   }, []);
 
   const trendingSearches = [
-    "Fresh Vegetables", "Cold Drinks", "Pantry Essentials", "Breakfast", "Snacks"
+    "Fresh Vegetables", "Pantry Essentials", "Breakfast", "Snacks", "Beauty"
   ];
   const promoOffers = [
     {
@@ -57,8 +57,8 @@ export default function HomePage() {
       color: "bg-[#e8f4f9] dark:bg-slate-800/50"
     },
     {
-      title: "Pet Care\nSupplies",
-      subtitle: "Food, treats, toys & more",
+      title: "Beauty\nRegimen",
+      subtitle: "Curated skincare & wellness",
       image: "/pet-card.png",
       color: "bg-[#fdf0e8] dark:bg-slate-800/50"
     },
@@ -199,23 +199,23 @@ export default function HomePage() {
     },
     {
       id: "pkg-7",
-      name: "Happy Paws Doggy Treat Box",
+      name: "Ayur Pooja Wellness Hamper",
       itemsCount: 9,
       rating: 4.9,
-      reviews: 3500,
-      badge: "SAVE 15%",
-      originalPrice: 1499,
-      price: 1274,
-      category: "Pet Special",
+      reviews: 1500,
+      badge: "SAVE 20%",
+      originalPrice: 2499,
+      price: 1999,
+      category: "Wellness",
       inStock: true,
       vendorId: "v-premium",
-      vendorName: "Happy Paws Co.",
-      description: "Treats and toys for your furry friend.",
-      tags: ["pet", "gift", "dog"],
+      vendorName: "PurePlus Personal Care",
+      description: "A complete ayurvedic wellness set for a healthy lifestyle.",
+      tags: ["wellness", "gift", "ayurvedic"],
       images: [
-        "https://images.unsplash.com/photo-1583337130417-3346a1be7dee?q=80&w=800",
-        "https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?q=80&w=800",
-        "https://images.unsplash.com/photo-1537151608828-ea2b11777ee8?q=80&w=800"
+        "https://images.unsplash.com/photo-1540555700478-4be289fbecef?q=80&w=800",
+        "https://images.unsplash.com/photo-1515377905703-c4788e51af15?q=80&w=800",
+        "https://images.unsplash.com/photo-1560963652-ae35208886ae?q=80&w=800"
       ],
     },
     {
@@ -476,7 +476,7 @@ export default function HomePage() {
               {/* Right Media - LARGE TOP-ONLY OVERFLOW */}
               <div className="flex-1 relative h-full w-full pointer-events-none min-h-[300px] md:min-h-0 z-30">
                 <div className="absolute inset-x-0 top-[-40%] bottom-[5%] flex items-end justify-center md:justify-end">
-                  <div className="relative w-[140%] h-[120%] md:w-[160%] md:h-[120%] transform rotate-3 group-hover:rotate-0 transition-all duration-1000 ease-out">
+                  <div className="relative w-[180%] h-[105%] md:w-[200%] md:h-[105%] transform rotate-3 group-hover:rotate-0 transition-all duration-1000 ease-out">
                     <Image
                       src="/front-view-back-school-concept-with-copy-space__2_.png"
                       alt="Premium School Supplies"

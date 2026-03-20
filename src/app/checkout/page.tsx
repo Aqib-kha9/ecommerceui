@@ -91,9 +91,9 @@ export default function CheckoutPage() {
                     { id: "email", label: "Email", placeholder: "john@example.com", col: 2 },
                     { id: "phone", label: "Phone Number", placeholder: "+91 98765 43210", col: 2 },
                     { id: "address", label: "Address", placeholder: "Street, Building No.", col: 2 },
-                    { id: "city", label: "City", placeholder: "Mumbai", col: 1 },
-                    { id: "state", label: "State", placeholder: "Maharashtra", col: 1 },
-                    { id: "pincode", label: "PIN Code", placeholder: "400001", col: 1 },
+                    { id: "city", label: "City", placeholder: "Vishakhapatnam", col: 1 },
+                    { id: "state", label: "State", placeholder: "Andhra Pradesh", col: 1 },
+                    { id: "pincode", label: "PIN Code", placeholder: "530001", col: 1 },
                   ].map(f => (
                     <div key={f.id} className={f.col === 2 ? "col-span-2" : ""}>
                       <Label className="text-slate-500 dark:text-slate-400 text-[10px] font-black uppercase tracking-widest mb-2 block">{f.label}</Label>

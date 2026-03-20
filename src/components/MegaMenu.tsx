@@ -13,49 +13,6 @@ interface MegaMenuProps {
 }
 
 const megaMenuData: Record<string, any> = {
-  "Beverages": {
-    columns: [
-      {
-        title: "COLD DRINKS",
-        items: ["Soft Drinks", "Fruit Juices", "Energy Drinks", "Iced Tea", "Milkshakes"]
-      },
-      {
-        title: "HOT BEVERAGES",
-        items: ["Premium Coffee", "Green Tea", "Masala Chai", "Hot Chocolate", "Instant Coffee"]
-      },
-      {
-        title: "WATER & MIXERS",
-        items: ["Mineral Water", "Sparkling Water", "Tonic Water", "Club Soda", "Flavoured Water"]
-      },
-      {
-        title: "HEALTH DRINKS",
-        items: ["Protein Shakes", "Aloe Vera Juice", "Coconut Water", "Detox Smoothies", "Vitamin Water"]
-      }
-    ],
-    banners: [
-      {
-        title: "Summer Drinks",
-        discount: "10% Off",
-        image: "https://images.unsplash.com/photo-1622483767028-3f66f32aef97?auto=format&fit=crop&q=80&w=600",
-        color: "bg-[#e8f4f9]",
-        linkText: "Shop Now"
-      },
-      {
-        title: "Coffee Bliss",
-        discount: "15% Off",
-        image: "https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&q=80&w=600",
-        color: "bg-[#fdf0e8]",
-        linkText: "Shop Now"
-      },
-      {
-        title: "Juice Pack",
-        discount: "23% Off",
-        image: "https://images.unsplash.com/photo-1613478223719-2ab80260f423?auto=format&fit=crop&q=80&w=600",
-        color: "bg-[#fdf6e6]",
-        linkText: "Shop Now"
-      }
-    ]
-  },
   "Groceries": {
     columns: [
       {
@@ -271,49 +228,6 @@ const megaMenuData: Record<string, any> = {
       }
     ]
   },
-  "Pet Care": {
-    columns: [
-      {
-        title: "DOG FOOD",
-        items: ["Dry Dog Food", "Wet Dog Food", "Dog Treats", "Puppy Food", "Dog Biscuits"]
-      },
-      {
-        title: "CAT FOOD",
-        items: ["Dry Cat Food", "Wet Cat Food", "Cat Treats", "Kitten Food", "Catnip"]
-      },
-      {
-        title: "ACCESSORIES",
-        items: ["Leashes & Collars", "Pet Bowls", "Pet Beds", "Cat Litter", "Chew Toys"]
-      },
-      {
-        title: "GROOMING",
-        items: ["Pet Shampoos", "Brushes & Combs", "Tick Collars", "Deodorizers", "Pet Wipes"]
-      }
-    ],
-    banners: [
-      {
-        title: "Dog Food",
-        discount: "15% Off",
-        image: "https://images.unsplash.com/photo-1583337130417-3346a1be7dee?auto=format&fit=crop&q=80&w=600",
-        color: "bg-[#fdf0e8]",
-        linkText: "Shop Now"
-      },
-      {
-        title: "Cat Food",
-        discount: "10% Off",
-        image: "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&q=80&w=600",
-        color: "bg-[#e8f4f9]",
-        linkText: "Shop Now"
-      },
-      {
-        title: "Pet Toys",
-        discount: "20% Off",
-        image: "https://images.unsplash.com/photo-1576201836106-db1758fd1c97?auto=format&fit=crop&q=80&w=600",
-        color: "bg-[#e8f9ed]",
-        linkText: "Shop Now"
-      }
-    ]
-  },
   "Pharmacy": {
     columns: [
       {
@@ -371,10 +285,6 @@ const megaMenuData: Record<string, any> = {
         title: "BABY CARE",
         items: ["Diapers", "Baby Wipes", "Baby Food", "Baby Lotion", "Baby Soap"]
       },
-      {
-        title: "PET CARE",
-        items: ["Dog Food", "Cat Food", "Pet Snacks", "Pet Shampoo", "Pet Toys"]
-      }
     ],
     banners: [
       {

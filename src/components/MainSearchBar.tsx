@@ -60,7 +60,7 @@ export default function MainSearchBar({ variant = "hero" }: MainSearchBarProps) 
             <div className="text-left">
               <p className="text-[9px] font-black uppercase tracking-widest text-slate-400">Deliver to</p>
               <p className="text-[11px] font-black text-slate-900 dark:text-white">
-                Bandra West <ChevronDown className="inline w-3 h-3 ml-1" />
+                Vishakhapatnam <ChevronDown className="inline w-3 h-3 ml-1" />
               </p>
             </div>
           </div>

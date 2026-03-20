@@ -184,8 +184,8 @@ export default function DashboardPage() {
                     {[
                       { label: "Full Name", value: "John Doe" },
                       { label: "Email", value: "john@example.com" },
-                      { label: "Phone", value: "+91 98765 43210" },
-                      { label: "Location", value: "Mumbai, Maharashtra" },
+                      { label: "Phone", value: "+91 89123 45678" },
+                      { label: "Location", value: "Vishakhapatnam, AP" },
                     ].map(field => (
                       <div key={field.label}>
                         <p className="text-slate-500 dark:text-slate-400 text-[10px] font-black uppercase tracking-widest mb-2">{field.label}</p>
