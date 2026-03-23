@@ -189,6 +189,15 @@
     @apply relative after:absolute after:inset-0 after:bg-primary/5 after:blur-2xl after:-z-10 hover:after:bg-primary/20 after:transition-colors;
   }
 
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
   .preserve-3d {
     transform-style: preserve-3d;
   }

@@ -330,22 +330,39 @@ export default function HomePage() {
                 <MainSearchBar variant="hero" />
               )}
 
-              {/* Trending Tags below search */}
-              <div className="flex flex-wrap justify-center mt-6 gap-3">
-                <span className="text-[10px] font-black uppercase tracking-[.2em] text-slate-500 dark:text-slate-400 mr-2 py-2">Trending:</span>
-                {trendingSearches.map((tag, i) => (
-                  <motion.button
-                    key={tag}
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    whileHover={{ scale: 1.05, y: -2 }}
-                    whileTap={{ scale: 0.95 }}
-                    transition={{ delay: 0.5 + (i * 0.1) }}
-                    className="px-4 py-1.5 rounded-full bg-white/50 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-[10px] font-black uppercase tracking-widest text-slate-600 dark:text-slate-400 hover:text-primary hover:border-primary/30 transition-all backdrop-blur-sm shadow-sm"
-                  >
-                    {tag}
-                  </motion.button>
-                ))}
+              {/* Elite Trending Searches Grid */}
+              <div className="flex flex-col items-center w-full mt-8 md:mt-10 space-y-4 px-4 overflow-visible">
+                <motion.div 
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.4 }}
+                  className="flex items-center gap-2"
+                >
+                  <Sparkles className="w-3.5 h-3.5 text-primary animate-pulse drop-shadow-[0_0_8px_rgba(var(--primary),0.5)]" />
+                  <span className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 dark:text-slate-500">Popular Searches</span>
+                </motion.div>
+
+                <div className="flex flex-wrap justify-center gap-2.5 max-w-sm md:max-w-xl">
+                  {trendingSearches.map((tag, i) => (
+                    <motion.button
+                      key={tag}
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      whileHover={{ scale: 1.05, y: -2, backgroundColor: "rgba(var(--primary), 0.05)" }}
+                      whileTap={{ scale: 0.95 }}
+                      transition={{ 
+                        type: "spring",
+                        stiffness: 400,
+                        damping: 25,
+                        delay: 0.5 + (i * 0.08) 
+                      }}
+                      className="group relative px-4 py-2 rounded-xl bg-white/50 dark:bg-white/5 border border-slate-200/60 dark:border-white/10 text-[10px] md:text-xs font-bold text-slate-600 dark:text-slate-400 hover:text-primary hover:border-primary/40 transition-all backdrop-blur-md shadow-sm hover:shadow-primary/5"
+                    >
+                      <span className="relative z-10 uppercase tracking-wider">{tag}</span>
+                      <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/5 transition-colors rounded-xl" />
+                    </motion.button>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
@@ -402,13 +419,33 @@ export default function HomePage() {
       </section>
 
       {/* ── UNIQUE SIGNATURE ARCH CARDS ── */}
-      <section className="container mx-auto px-4 py-12 md:py-16 overflow-hidden">
-        <div className="flex overflow-x-auto scrollbar-hide gap-4 md:flex-wrap md:gap-6 shrink-0 md:justify-center items-start pb-4">
+      <section className="container mx-auto px-4 py-8 md:py-16 overflow-hidden">
+        {/* Mobile Category Grid (Blinkit Style) */}
+        <div className="md:hidden grid grid-cols-4 gap-y-6 gap-x-2">
+          {categories.map((cat) => (
+            <Link key={cat.id} href={`/products?category=${cat.name}`} className="flex flex-col items-center gap-2 group">
+              <div className="w-16 h-16 rounded-2xl bg-[#f0f9f4] dark:bg-emerald-500/10 flex items-center justify-center p-3 transition-transform group-active:scale-90 overflow-hidden relative border border-emerald-100/50 dark:border-emerald-500/20">
+                <div className="relative w-full h-full">
+                  <Image
+                    src={cat.icon}
+                    alt={cat.name}
+                    fill
+                    className="object-contain"
+                  />
+                </div>
+              </div>
+              <span className="text-[10px] font-bold text-slate-700 dark:text-slate-300 text-center leading-tight tracking-tight">
+                {cat.name.split(' ').join('\n')}
+              </span>
+            </Link>
+          ))}
+        </div>
+
+        {/* Desktop Signature Arch Cards */}
+        <div className="hidden md:flex overflow-x-auto scrollbar-hide gap-4 md:flex-wrap md:gap-6 shrink-0 md:justify-center items-start pb-4">
           {categories.map((cat) => (
             <Link key={cat.id} href={`/products?category=${cat.name}`} className="group flex flex-col items-center shrink-0 w-[100px] md:w-[130px]">
               <div className="relative w-full aspect-[3/4.2] rounded-t-full rounded-b-[2rem] shadow-[0_4px_20px_rgba(0,0,0,0.04)] dark:shadow-[0_4px_20px_rgba(255,255,255,0.02)] border border-slate-100 dark:border-white/5 transition-all duration-500 ease-out group-hover:-translate-y-2 group-hover:shadow-[0_20px_40px_rgba(0,0,0,0.08)] group-hover:border-primary/20 bg-white dark:bg-[#0c0d0e] p-2 md:p-2.5 flex flex-col">
-
-                {/* Inner Arch Window for Image */}
                 <div className="relative w-full flex-1 rounded-t-full rounded-b-2xl overflow-hidden shadow-inner bg-slate-100 dark:bg-slate-800 border border-slate-100/50 dark:border-white/5">
                   <Image
                     src={cat.icon}
@@ -417,19 +454,14 @@ export default function HomePage() {
                     sizes="120px"
                     className="object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
                   />
-                  {/* Subtle hover wash */}
-                  <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/20 transition-colors duration-500 mix-blend-color pointer-events-none" />
                 </div>
-
-                {/* Title area at the bottom inside the card */}
                 <div className="h-12 md:h-14 flex flex-col items-center justify-center shrink-0 w-full relative overflow-hidden">
-                  <div className="absolute inset-0 flex flex-col items-center justify-center transition-all duration-300 ease-[cubic-bezier(0.25,1,0.5,1)] group-hover:-translate-y-full opacity-100 group-hover:opacity-0">
+                  <div className="absolute inset-0 flex flex-col items-center justify-center transition-all duration-300 group-hover:-translate-y-full opacity-100 group-hover:opacity-0">
                     <span className="text-[11px] md:text-[13px] font-black text-slate-800 dark:text-slate-100 text-center leading-tight tracking-tight px-1 drop-shadow-sm">
                       {cat.name}
                     </span>
                   </div>
-
-                  <div className="absolute inset-0 flex flex-col items-center justify-center transition-all duration-300 ease-[cubic-bezier(0.25,1,0.5,1)] translate-y-full group-hover:translate-y-0 opacity-0 group-hover:opacity-100">
+                  <div className="absolute inset-0 flex flex-col items-center justify-center transition-all duration-300 translate-y-full group-hover:translate-y-0 opacity-0 group-hover:opacity-100">
                     <span className="text-[9px] md:text-[10px] font-bold text-primary uppercase tracking-widest flex items-center gap-1 group-hover:scale-105 transition-transform duration-300 delay-100">
                       Explore <ArrowRight className="w-3 h-3" />
                     </span>
@@ -507,7 +539,7 @@ export default function HomePage() {
           </Button>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 md:gap-4">
           {productPackages.map((pkg) => (
             <ProductCard key={pkg.id} product={pkg} layout="square" />
           ))}
@@ -515,8 +547,8 @@ export default function HomePage() {
       </section>
 
       {/* ── BRAND LOGO MARQUEE ── */}
-      <section className="bg-primary/[0.02] dark:bg-primary/[0.01] py-20 border-y border-slate-100 dark:border-white/10 overflow-hidden">
-        <div className="container mx-auto px-4 mb-12 text-center">
+      <section className="bg-primary/[0.02] dark:bg-primary/[0.01] py-12 md:py-20 border-y border-slate-100 dark:border-white/10 overflow-hidden">
+        <div className="container mx-auto px-4 mb-8 md:mb-12 text-center">
           <p className="text-[10px] uppercase tracking-[0.3em] text-slate-400 dark:text-slate-500 font-black">Premium Brand Partners</p>
         </div>
         
@@ -532,8 +564,8 @@ export default function HomePage() {
             }}
           >
             {[...brands, ...brands].map((brand, i) => (
-              <div key={`${brand.name}-${i}`} className="flex flex-col items-center gap-3 group cursor-pointer transition-all duration-500 flex-shrink-0">
-                <div className="w-20 h-20 md:w-28 md:h-28 rounded-2xl bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 flex items-center justify-center p-5 group-hover:scale-110 transition-transform ">
+              <div key={`${brand.name}-${i}`} className="flex flex-col items-center gap-2 group cursor-pointer transition-all duration-500 flex-shrink-0">
+                <div className="w-16 h-16 md:w-28 md:h-28 rounded-2xl bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 flex items-center justify-center p-4 group-hover:scale-110 transition-transform ">
                   <div className="relative w-full h-full">
                     <Image 
                       src={brand.image} 
@@ -543,7 +575,7 @@ export default function HomePage() {
                     />
                   </div>
                 </div>
-                <span className="text-[10px] font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 group-hover:text-primary transition-colors">{brand.name}</span>
+                <span className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 group-hover:text-primary transition-colors">{brand.name}</span>
               </div>
             ))}
           </motion.div>
@@ -552,18 +584,18 @@ export default function HomePage() {
 
       {/* ── MOST SELLING PRODUCTS ── */}
       <section className="container mx-auto px-4 py-12 pb-20">
-        <div className="flex items-center justify-between mb-10">
+        <div className="flex items-center justify-between mb-8">
           <div>
-            <h2 className="text-3xl font-black text-slate-900 dark:text-white tracking-tighter uppercase">Most Sold <span className="text-primary italic">Products</span></h2>
-            <p className="text-slate-500 dark:text-slate-400 text-sm mt-1 font-medium italic underline underline-offset-4 decoration-primary/30">Top-rated favorites by our community</p>
+            <h2 className="text-2xl md:text-3xl font-black text-slate-900 dark:text-white tracking-tighter uppercase">Most Sold <span className="text-primary italic">Products</span></h2>
+            <p className="text-slate-500 dark:text-slate-400 text-xs md:text-sm mt-1 font-medium italic underline underline-offset-4 decoration-primary/30">Top-rated favorites by our community</p>
           </div>
           <Link href="/products">
-            <Button variant="ghost" className="text-primary hover:opacity-80 gap-2 font-bold uppercase tracking-widest text-[10px]">
+            <Button variant="ghost" className="text-primary hover:opacity-80 gap-2 font-bold uppercase tracking-widest text-[9px] md:text-[10px]">
               See All <ChevronRight className="w-4 h-4" />
             </Button>
           </Link>
         </div>
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3 md:gap-4">
           {products.map((product) => (
             <ProductCard key={product.id} product={product} layout="horizontal" />
           ))}

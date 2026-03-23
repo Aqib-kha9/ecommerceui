@@ -49,8 +49,8 @@ export default function MainSearchBar({ variant = "hero" }: MainSearchBarProps) 
       )}
 
       <div
-        className={`relative bg-white/40 dark:bg-slate-900/40 backdrop-blur-3xl border border-white/40 dark:border-white/10 rounded-[2rem] p-2 shadow-[0_40px_100px_-20px_rgba(0,0,0,0.15)] ring-1 ring-white/20 dark:ring-white/5 transition-all focus-within:ring-primary/40 focus-within:shadow-primary/10 ${
-          !isHero ? "h-12 flex items-center" : ""
+        className={`relative bg-white/40 dark:bg-slate-900/40 backdrop-blur-3xl border border-white/40 dark:border-white/10 rounded-2xl md:rounded-[2rem] p-1.5 md:p-2 shadow-lg md:shadow-[0_40px_100px_-20px_rgba(0,0,0,0.15)] ring-1 ring-white/20 dark:ring-white/5 transition-all focus-within:ring-primary/40 focus-within:shadow-primary/10 ${
+          !isHero ? "h-11 md:h-12 flex items-center" : ""
         }`}
       >
         <div className="flex items-center gap-2 w-full">
