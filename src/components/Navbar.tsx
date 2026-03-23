@@ -73,46 +73,20 @@ export default function Navbar() {
           className="flex h-16 md:h-18 items-center gap-4"
           onMouseEnter={() => setActiveCategory(null)}
         >
-          {/* Mobile menu */}
-          <Sheet>
-            <SheetTrigger
-              render={
-                <Button variant="ghost" size="icon" className="md:hidden text-slate-900 dark:text-white hover:bg-slate-100 dark:hover:bg-white/10 rounded-xl">
-                  <Menu className="h-5 w-5" />
-                </Button>
-              }
-            />
-            <SheetContent side="left" className="bg-slate-950/95 backdrop-blur-2xl border-white/10 text-white w-80">
-              <div className="flex items-center gap-3 mb-10 pt-6 px-2">
-                <div className="w-10 h-10 rounded-xl bg-[var(--primary-gradient)] flex items-center justify-center shadow-lg shadow-primary/30">
-                  <Store className="w-6 h-6 text-white" />
-                </div>
-                <span className="font-black text-2xl text-white tracking-tighter uppercase">Ayur Pooja</span>
-              </div>
-              <nav className="flex flex-col gap-2">
-                {navLinks.map((link) => (
-                  <Link 
-                    key={link.href} 
-                    href={link.href} 
-                    className="group flex items-center justify-between px-4 py-4 rounded-2xl hover:bg-white/5 transition-all text-slate-400 hover:text-white font-bold"
-                  >
-                    {link.label}
-                    <Badge variant="outline" className="opacity-0 group-hover:opacity-100 transition-opacity border-primary/50 text-primary text-[8px]">Shop</Badge>
-                  </Link>
-                ))}
-              </nav>
-            </SheetContent>
-          </Sheet>
+          {/* Mobile menu - Hidden on mobile in favor of BottomNav, or kept for more links */}
+          <div className="md:hidden w-10" /> {/* Spacer to help centering logo */}
 
-          {/* Logo */}
-          <Link href="/" className="flex items-center gap-3 shrink-0 group">
-            <div className="w-10 h-10 rounded-xl  flex items-center justify-center group-hover:scale-110 transition-all">
-              <Store className="w-6 h-6 " />
-            </div>
-            <span className="font-black text-xl md:text-2xl text-slate-950 dark:text-white tracking-tighter uppercase">
-              Ayur<span className="text-primary italic">Pooja</span>
-            </span>
-          </Link>
+          {/* Logo - Centered on mobile */}
+          <div className="flex-1 flex justify-center md:justify-start">
+            <Link href="/" className="flex items-center gap-2 md:gap-3 shrink-0 group">
+              <div className="w-8 h-8 md:w-10 md:h-10 rounded-xl flex items-center justify-center group-hover:scale-110 transition-all">
+                <Store className="w-5 h-5 md:w-6 md:h-6 text-primary" />
+              </div>
+              <span className="font-black text-lg md:text-2xl text-slate-950 dark:text-white tracking-tighter uppercase">
+                Ayur<span className="text-primary italic">Pooja</span>
+              </span>
+            </Link>
+          </div>
 
           {/* Unified Shared Element Sticky Search Bar */}
           <div className="flex-1 max-w-2xl hidden md:flex items-center relative px-4 gap-4">
@@ -185,7 +159,7 @@ export default function Navbar() {
               </Button>
             </div>
 
-            <Link href="/cart">
+            <Link href="/cart" className="hidden sm:flex">
               <Button variant="ghost" size="icon" className="text-slate-600 dark:text-slate-400 hover:text-primary hover:bg-primary/5 relative rounded-xl h-11 w-11 transition-all group">
                 <ShoppingCart className="w-5 h-5 group-hover:scale-110 transition-transform" />
                 <Badge className="absolute -top-1 -right-1 min-w-[1.25rem] h-5 p-1 flex items-center justify-center bg-primary text-white text-[10px] rounded-full border-2 border-background font-black shadow-lg shadow-primary/20">

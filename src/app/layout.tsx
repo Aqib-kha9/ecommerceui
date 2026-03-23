@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import BottomNav from "@/components/BottomNav";
 
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { SearchProvider } from "@/components/SearchContext";
@@ -41,8 +42,11 @@ export default function RootLayout({
         >
           <SearchProvider>
             <Navbar />
-            {children}
+            <main className="pb-20 md:pb-0">
+              {children}
+            </main>
             <Footer />
+            <BottomNav />
           </SearchProvider>
         </ThemeProvider>
       </body>

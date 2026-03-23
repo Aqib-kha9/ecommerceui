@@ -295,7 +295,7 @@ export default function HomePage() {
   return (
     <main className="min-h-screen bg-white dark:bg-[#08090a] text-foreground overflow-hidden">
       {/* ── MINIMALIST SEARCH HERO ── */}
-      <section ref={targetRef} className="relative h-[85vh] min-h-[650px] overflow-hidden flex items-start justify-center pt-8 md:pt-12">
+      <section ref={targetRef} className="relative h-[60vh] md:h-[85vh] min-h-[450px] md:min-h-[650px] overflow-hidden flex items-start justify-center pt-12 md:pt-12">
         <HeroVideoBackground />
 
         <motion.div
@@ -305,11 +305,11 @@ export default function HomePage() {
           <div className="max-w-4xl w-full space-y-6">
             {/* Minimalist Powerful Heading */}
             <div className="space-y-1">
-              <motion.h1
+                <motion.h1
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-                className="text-5xl md:text-8xl font-black text-slate-950 dark:text-white leading-[0.95] tracking-tighter"
+                className="text-4xl md:text-8xl font-black text-slate-950 dark:text-white leading-[0.95] tracking-tighter"
               >
                 Find what you need<br />
                 <span className="text-primary italic">In seconds.</span>
@@ -318,7 +318,7 @@ export default function HomePage() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.4 }}
-                className="text-slate-700 dark:text-slate-300 text-lg md:text-xl font-bold drop-shadow-sm opacity-80"
+                className="text-slate-700 dark:text-slate-300 text-base md:text-xl font-bold drop-shadow-sm opacity-80"
               >
                 Everything for your home, delivered with speed.
               </motion.p>
@@ -365,7 +365,7 @@ export default function HomePage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1, duration: 0.6, ease: "easeOut" }}
-                className={`flex-1 min-w-[320px] md:min-w-[400px] relative overflow-hidden rounded-[2rem] ${offer.color} p-10 flex flex-col justify-between group cursor-pointer transition-transform hover:-translate-y-2 shadow-sm border border-slate-100 dark:border-white/5 h-[240px]`}
+                className={`flex-1 min-w-[300px] md:min-w-[400px] relative overflow-hidden rounded-[2rem] ${offer.color} p-8 md:p-10 flex flex-col justify-between group cursor-pointer transition-transform hover:-translate-y-2 shadow-sm border border-slate-100 dark:border-white/5 h-[200px] md:h-[240px]`}
               >
                 <div className="relative z-10 w-[60%] h-full flex flex-col justify-center">
                   <div className="space-y-2 mb-6">
@@ -402,8 +402,8 @@ export default function HomePage() {
       </section>
 
       {/* ── UNIQUE SIGNATURE ARCH CARDS ── */}
-      <section className="container mx-auto px-4 py-16 scrollbar-hide overflow-x-auto">
-        <div className="flex md:flex-wrap gap-4 md:gap-6 shrink-0 justify-center items-start">
+      <section className="container mx-auto px-4 py-12 md:py-16 overflow-hidden">
+        <div className="flex overflow-x-auto scrollbar-hide gap-4 md:flex-wrap md:gap-6 shrink-0 md:justify-center items-start pb-4">
           {categories.map((cat) => (
             <Link key={cat.id} href={`/products?category=${cat.name}`} className="group flex flex-col items-center shrink-0 w-[100px] md:w-[130px]">
               <div className="relative w-full aspect-[3/4.2] rounded-t-full rounded-b-[2rem] shadow-[0_4px_20px_rgba(0,0,0,0.04)] dark:shadow-[0_4px_20px_rgba(255,255,255,0.02)] border border-slate-100 dark:border-white/5 transition-all duration-500 ease-out group-hover:-translate-y-2 group-hover:shadow-[0_20px_40px_rgba(0,0,0,0.08)] group-hover:border-primary/20 bg-white dark:bg-[#0c0d0e] p-2 md:p-2.5 flex flex-col">
@@ -442,11 +442,11 @@ export default function HomePage() {
       </section>
 
       {/* ── REFINED FULL WIDTH OFFER BANNER ── */}
-      <section className="w-full pb-16 relative">
+      <section className="w-full pb-12 md:pb-16 relative">
         {/* Banner Background Layer - Clipped */}
-        <div className="absolute inset-0 h-[250px] md:h-[250px] bg-gradient-to-r from-primary/5 via-primary/10 to-transparent dark:from-primary/10 dark:via-primary/20 dark:to-transparent overflow-hidden" />
+        <div className="absolute inset-0 h-[400px] md:h-[250px] bg-gradient-to-r from-primary/5 via-primary/10 to-transparent dark:from-primary/10 dark:via-primary/20 dark:to-transparent overflow-hidden" />
         
-        <div className="relative h-[250px] md:h-[250px] w-full flex items-center">
+        <div className="relative h-[400px] md:h-[250px] w-full flex items-center">
           {/* Subtle Background Elements (inside clipped layer or separate) */}
           <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-white/50 dark:from-black/20 to-transparent pointer-events-none overflow-hidden" />
           
@@ -455,7 +455,7 @@ export default function HomePage() {
 
               {/* Left Content */}
               <div className="flex-1 z-20 py-8 md:py-0 text-center md:text-left">
-                <h3 className="text-4xl md:text-5xl lg:text-6xl font-black text-slate-900 dark:text-white leading-[1] tracking-tighter mb-4 whitespace-nowrap">
+                <h3 className="text-3xl md:text-5xl lg:text-6xl font-black text-slate-900 dark:text-white leading-[1] tracking-tighter mb-4 whitespace-nowrap">
                   Back to School <span className="text-primary">Essentials.</span>
                 </h3>
 
@@ -468,8 +468,8 @@ export default function HomePage() {
                   </button>
                 </div>
 
-                <p className="text-slate-600 dark:text-slate-400 text-sm md:text-lg font-bold tracking-tight mb-0">
-                  GET FLAT <span className="text-2xl md:text-3xl font-black text-primary px-2 bg-primary/10 rounded-lg">50% OFF</span> ON EVERYTHING
+                <p className="text-slate-600 dark:text-slate-400 text-xs md:text-lg font-bold tracking-tight mb-0">
+                  GET FLAT <span className="text-xl md:text-3xl font-black text-primary px-2 bg-primary/10 rounded-lg">50% OFF</span> ON EVERYTHING
                 </p>
               </div>
 
@@ -579,12 +579,12 @@ export default function HomePage() {
           <div className="relative flex flex-col md:flex-row items-center gap-12">
             {/* Left Content */}
             <div className="flex-1 text-center md:text-left">
-              <Badge className="mb-6 bg-primary/10 text-primary border-primary/20 px-4 py-1 rounded-full uppercase tracking-widest text-[9px] font-black">Mobile Experience</Badge>
-              <h2 className="text-4xl md:text-5xl font-black text-slate-900 dark:text-white mb-6 leading-[1.1] tracking-tighter">
+              <Badge className="mb-4 md:mb-6 bg-primary/10 text-primary border-primary/20 px-4 py-1 rounded-full uppercase tracking-widest text-[9px] font-black">Mobile Experience</Badge>
+              <h2 className="text-3xl md:text-5xl font-black text-slate-900 dark:text-white mb-4 md:mb-6 leading-[1.1] tracking-tighter">
                 Shop on the go with our <br />
                 <span className="text-primary">Premium Mobile App.</span>
               </h2>
-              <p className="text-slate-600 dark:text-slate-400 mb-10 text-lg font-medium max-w-lg leading-relaxed">
+              <p className="text-slate-600 dark:text-slate-400 mb-8 md:mb-10 text-base md:text-lg font-medium max-w-lg leading-relaxed">
                 Get the best deals, real-time tracking, and exclusive app-only rewards. Download now and start your premium shopping journey.
               </p>
               

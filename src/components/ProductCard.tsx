@@ -140,7 +140,7 @@ export default function ProductCard({
 
   // DEFAULT SQUARE LAYOUT (Premium Square style for Curated/Regular)
   return (
-    <div className="bg-white dark:bg-[#0c0d0e] rounded-[1.2rem] border border-slate-200 dark:border-white/5 p-2 hover:shadow-xl transition-all duration-500 overflow-hidden flex flex-col h-full group/card relative">
+    <div className="bg-white dark:bg-[#0c0d0e] rounded-[1.2rem] border border-slate-200 dark:border-white/5 p-1.5 md:p-2 hover:shadow-xl transition-all duration-500 overflow-hidden flex flex-col h-full group/card relative">
       {/* Product Image Carousel */}
       <div className="relative aspect-square w-full rounded-[0.8rem] overflow-hidden mb-3 shrink-0 group">
         <div 
@@ -196,36 +196,36 @@ export default function ProductCard({
 
       {/* Content area */}
       <div className="px-1 pb-1 flex flex-col flex-1">
-        <div className="mb-2">
-          <span className="text-[8px] font-black uppercase tracking-[0.15em] text-primary">
+        <div className="mb-1 md:mb-2">
+          <span className="text-[7px] md:text-[8px] font-black uppercase tracking-[0.15em] text-primary">
             {product.category}
           </span>
         </div>
 
         <Link href={`/products/${product.id}`}>
-          <h4 className="text-[13px] font-black text-slate-900 dark:text-white leading-[1.2] mb-3 tracking-tight line-clamp-2 min-h-[2.4rem] hover:text-primary transition-colors">
+          <h4 className="text-[11px] md:text-[13px] font-black text-slate-900 dark:text-white leading-[1.2] mb-2 md:mb-3 tracking-tight line-clamp-2 min-h-[2.4rem] hover:text-primary transition-colors">
             {product.name} {product.itemsCount ? `(${product.itemsCount} Items)` : ''}
           </h4>
         </Link>
 
-        <div className="flex items-center gap-0.5 text-[#facc15] mb-4">
+        <div className="flex items-center gap-0.5 text-[#facc15] mb-3 md:mb-4">
           {[...Array(5)].map((_, i) => (
-            <Zap key={i} className={`w-3 h-3 fill-current ${i >= Math.round(product.rating) ? 'opacity-40' : ''}`} />
+            <Zap key={i} className={`w-2 h-2 md:w-3 md:h-3 fill-current ${i >= Math.round(product.rating) ? 'opacity-40' : ''}`} />
           ))}
-          <span className="text-slate-400 font-black text-[10px] ml-1.5 tracking-tight">({product.reviews.toLocaleString()})</span>
+          <span className="text-slate-400 font-black text-[8px] md:text-[10px] ml-1 md:ml-1.5 tracking-tight">({product.reviews.toLocaleString()})</span>
         </div>
 
         {/* Price & Add to Cart */}
         <div className="mt-auto pt-3 border-t border-dashed border-slate-200 dark:border-white/10">
           <div className="flex items-center justify-between gap-2">
             <div className="flex flex-col">
-              <span className="text-lg font-black text-slate-950 dark:text-white tracking-tighter leading-none">
+              <span className="text-base md:text-lg font-black text-slate-950 dark:text-white tracking-tighter leading-none">
                 ₹{product.price.toLocaleString()}
               </span>
               {product.originalPrice && (
-                <div className="flex items-center gap-1.5 mt-1">
-                  <span className="text-[9px] text-slate-400 font-bold line-through">₹{product.originalPrice.toLocaleString()}</span>
-                  <span className="text-[8px] font-black text-green-500">
+                <div className="flex items-center gap-1 mt-0.5 md:mt-1">
+                  <span className="text-[8px] md:text-[9px] text-slate-400 font-bold line-through">₹{product.originalPrice.toLocaleString()}</span>
+                  <span className="text-[7px] md:text-[8px] font-black text-green-500">
                     {Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)}% OFF
                   </span>
                 </div>
@@ -233,10 +233,15 @@ export default function ProductCard({
             </div>
             
             <Button 
-              className="h-8 px-4 bg-slate-950 dark:bg-white text-white dark:text-slate-900 hover:bg-primary dark:hover:bg-primary hover:text-white dark:hover:text-white rounded-full text-[9px] font-black uppercase tracking-widest transition-all shadow-md active:scale-95 border-none"
+              className="h-7 md:h-8 px-3 md:px-4 bg-slate-950 dark:bg-white text-white dark:text-slate-900 hover:bg-primary dark:hover:bg-primary hover:text-white dark:hover:text-white rounded-full text-[8px] md:text-[9px] font-black uppercase tracking-widest transition-all shadow-md active:scale-95 border-none"
               disabled={!product.inStock}
             >
-              {product.inStock ? 'ADD TO CART' : 'OUT'}
+              {product.inStock ? (
+                <>
+                  <span className="md:hidden">ADD</span>
+                  <span className="hidden md:inline">ADD TO CART</span>
+                </>
+              ) : 'OUT'}
             </Button>
           </div>
         </div>
