@@ -49,11 +49,11 @@ export default function MainSearchBar({ variant = "hero" }: MainSearchBarProps) 
       )}
 
       <div
-        className={`relative bg-white/40 dark:bg-slate-900/40 backdrop-blur-3xl border border-white/40 dark:border-white/10 rounded-2xl md:rounded-[2rem] p-1.5 md:p-2 shadow-lg md:shadow-[0_40px_100px_-20px_rgba(0,0,0,0.15)] ring-1 ring-white/20 dark:ring-white/5 transition-all focus-within:ring-primary/40 focus-within:shadow-primary/10 ${
-          !isHero ? "h-11 md:h-12 flex items-center" : ""
+        className={`relative bg-white/70 dark:bg-slate-900/40 backdrop-blur-xl border border-slate-200/80 dark:border-white/10 rounded-full transition-all focus-within:ring-1 focus-within:ring-primary/30 focus-within:border-primary/50 hover:border-slate-300 dark:hover:border-white/20 ${
+          !isHero ? "h-12 md:h-14 flex items-center p-1 md:p-1.5" : "p-1.5 md:p-2"
         }`}
       >
-        <div className="flex items-center gap-2 w-full">
+        <div className="flex items-center gap-1 md:gap-2 w-full h-full">
           {/* Location Picker - Hidden or smaller in Navbar if needed, but keeping for "Same to Same" */}
           <div className={`hidden md:flex items-center gap-3 px-4 ${isHero ? "py-3" : "py-1.5"} bg-slate-100/50 dark:bg-white/5 rounded-[1.5rem] border border-white/20 cursor-pointer hover:bg-white transition-colors group shrink-0`}>
             <MapPin className="w-4 h-4 text-primary" />
@@ -66,12 +66,12 @@ export default function MainSearchBar({ variant = "hero" }: MainSearchBarProps) 
           </div>
 
           {/* Search Input */}
-          <div className="flex-1 flex items-center px-4 md:px-6">
-            <Search className="w-5 h-5 text-slate-400 mr-3" />
+          <div className="flex-1 flex items-center px-3 md:px-6 h-full">
+            <Search className="w-4 h-4 md:w-5 md:h-5 text-slate-400 mr-2 md:mr-3 shrink-0" />
             <input
               type="text"
               placeholder={placeholders[activePlaceholder]}
-              className={`w-full bg-transparent border-0 focus:ring-0 font-bold placeholder:text-slate-400 dark:text-white ${
+              className={`w-full h-full bg-transparent border-0 focus:ring-0 font-bold placeholder:text-slate-400 dark:text-white outline-none ${
                 isHero ? "text-lg py-3" : "text-sm py-1"
               }`}
               value={searchQuery}
@@ -81,7 +81,7 @@ export default function MainSearchBar({ variant = "hero" }: MainSearchBarProps) 
 
           {/* Action Button */}
           <Button
-            className={`hidden md:flex bg-primary hover:bg-primary/90 text-white font-black rounded-[1.5rem] shadow-xl shadow-primary/20 transition-transform active:scale-95 ${
+            className={`hidden md:flex bg-primary hover:bg-primary/90 text-white font-black rounded-full shadow-xl shadow-primary/20 transition-transform active:scale-95 ${
               isHero ? "px-8 h-14 text-base" : "px-6 h-10 text-xs"
             }`}
           >
@@ -91,12 +91,11 @@ export default function MainSearchBar({ variant = "hero" }: MainSearchBarProps) 
           {/* Mobile Search Icon */}
           <Button
             size="icon"
-            variant="ghost"
-            className={`md:hidden rounded-full bg-primary text-white ${
-              isHero ? "w-12 h-12" : "w-10 h-10"
+            className={`md:hidden rounded-full bg-gradient-to-br from-primary to-primary/90 text-white shrink-0 shadow-md shadow-primary/30 transition-transform active:scale-95 ${
+              isHero ? "w-10 h-10" : "w-10 h-10"
             }`}
           >
-            <Search className="w-5 h-5" />
+            <Search className="w-4 h-4 md:w-5 md:h-5" />
           </Button>
         </div>
       </div>

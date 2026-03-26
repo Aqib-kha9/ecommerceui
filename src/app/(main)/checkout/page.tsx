@@ -19,8 +19,12 @@ const steps = ["Address", "Payment", "Review"];
 
 export default function CheckoutPage() {
   const [step, setStep] = useState(0);
-  const [payment, setPayment] = useState("card");
+  const [payment, setPayment] = useState("upi");
   const [ordered, setOrdered] = useState(false);
+  const [coupon, setCoupon] = useState("");
+  const [couponApplied, setCouponApplied] = useState(false);
+  const [couponError, setCouponError] = useState("");
+  const [useWallet, setUseWallet] = useState(false);
 
   const subtotal = cartItems.reduce((s, i) => s + i.price * i.qty, 0);
   const shipping = subtotal > 999 ? 0 : 49;
@@ -112,55 +116,109 @@ export default function CheckoutPage() {
             )}
 
             {step === 1 && (
-              <div className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-white/5 rounded-[2.5rem] p-8 md:p-12 shadow-2xl">
-                <h2 className="text-xl font-black text-slate-900 dark:text-white mb-8 uppercase tracking-tight">Payment Method</h2>
-                <div className="space-y-4 mb-8">
-                  {paymentMethods.map(method => (
-                    <button
-                      key={method.id}
-                      onClick={() => setPayment(method.id)}
-                      className={`w-full flex items-center gap-4 p-5 rounded-2xl border-2 transition-all text-left shadow-sm ${
-                        payment === method.id ? "border-primary bg-primary/10" : "border-slate-50 dark:border-slate-800 hover:border-primary/20 dark:hover:border-primary/20 bg-slate-50 dark:bg-white/5"
-                      }`}
-                    >
-                      <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${payment === method.id ? "border-primary" : "border-slate-300 dark:border-slate-600"}`}>
-                        {payment === method.id && <div className="w-2.5 h-2.5 rounded-full bg-primary animate-in zoom-in-50" />}
-                      </div>
-                      <method.icon className={`w-6 h-6 ${payment === method.id ? "text-primary" : "text-slate-400"}`} />
-                      <span className={`font-black text-sm uppercase tracking-widest ${payment === method.id ? "text-slate-900 dark:text-white" : "text-slate-500 dark:text-slate-400"}`}>{method.label}</span>
-                    </button>
-                  ))}
+              <div className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-white/5 rounded-[2.5rem] p-8 md:p-12 shadow-2xl space-y-8">
+                <h2 className="text-xl font-black text-slate-900 dark:text-white uppercase tracking-tight">Payment</h2>
+
+                {/* Coupon Code */}
+                <div>
+                  <label className="text-[11px] font-black uppercase tracking-widest text-slate-400 mb-2 block">Coupon Code</label>
+                  <div className="flex gap-2">
+                    <Input
+                      placeholder="Enter promo code (e.g. SAVE50)"
+                      value={coupon}
+                      onChange={e => { setCoupon(e.target.value.toUpperCase()); setCouponApplied(false); setCouponError(""); }}
+                      className="h-12 rounded-2xl border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-slate-800 font-bold tracking-widest uppercase flex-1"
+                    />
+                    <Button
+                      onClick={() => {
+                        if (coupon === "SAVE50") { setCouponApplied(true); setCouponError(""); }
+                        else if (coupon === "FRESH100") { setCouponApplied(true); setCouponError(""); }
+                        else { setCouponError("Invalid coupon code"); setCouponApplied(false); }
+                      }}
+                      className="h-12 px-6 rounded-2xl bg-primary font-black text-sm shrink-0">
+                      Apply
+                    </Button>
+                  </div>
+                  {couponApplied && <p className="text-green-600 text-xs font-bold mt-2">✓ Coupon applied! {coupon === "SAVE50" ? "50% OFF (max ₹250)" : "₹100 OFF"}</p>}
+                  {couponError && <p className="text-red-500 text-xs font-bold mt-2">✗ {couponError}</p>}
                 </div>
 
-                {payment === "card" && (
-                  <div className="grid grid-cols-2 gap-4 mb-6">
-                    <div className="col-span-2">
-                      <Label className="text-slate-300 text-sm mb-1.5 block">Card Number</Label>
-                      <Input placeholder="1234 5678 9012 3456" className="bg-slate-700 border-slate-600 text-white placeholder:text-slate-500 focus:border-primary rounded-xl" />
-                    </div>
-                    <div>
-                      <Label className="text-slate-300 text-sm mb-1.5 block">Expiry</Label>
-                      <Input placeholder="MM/YY" className="bg-slate-700 border-slate-600 text-white placeholder:text-slate-500 focus:border-primary rounded-xl" />
-                    </div>
-                    <div>
-                      <Label className="text-slate-300 text-sm mb-1.5 block">CVV</Label>
-                      <Input placeholder="•••" className="bg-slate-700 border-slate-600 text-white placeholder:text-slate-500 focus:border-primary rounded-xl" />
-                    </div>
+                {/* Wallet */}
+                <div className="flex items-center justify-between bg-primary/[0.03] dark:bg-primary/5 rounded-2xl border border-primary/10 p-4">
+                  <div>
+                    <p className="font-black text-sm text-slate-900 dark:text-white">AyurPooja Wallet</p>
+                    <p className="text-xs text-slate-500 mt-0.5">Available: <span className="font-black text-primary">₹1,250</span></p>
                   </div>
-                )}
+                  <button
+                    onClick={() => setUseWallet(w => !w)}
+                    className={`relative w-12 h-6 rounded-full transition-colors ${useWallet ? "bg-primary" : "bg-slate-200 dark:bg-slate-700"}`}>
+                    <span className={`absolute top-1 w-4 h-4 bg-white rounded-full shadow transition-all ${useWallet ? "left-7" : "left-1"}`} />
+                  </button>
+                </div>
+                {useWallet && <p className="text-xs text-green-600 font-bold -mt-4 ml-2">✓ ₹1,250 wallet credits will be applied at checkout</p>}
 
-                {payment === "upi" && (
-                  <div className="mb-6">
-                    <Label className="text-slate-300 text-sm mb-1.5 block">UPI ID</Label>
-                    <Input placeholder="yourname@upi" className="bg-slate-700 border-slate-600 text-white placeholder:text-slate-500 focus:border-primary rounded-xl" />
+                {/* Payment Methods */}
+                <div>
+                  <label className="text-[11px] font-black uppercase tracking-widest text-slate-400 mb-3 block">Payment Method</label>
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-6">
+                    {[
+                      { id: "upi", label: "UPI" },
+                      { id: "card", label: "Card" },
+                      { id: "netbanking", label: "Net Banking" },
+                      { id: "cod", label: "COD" },
+                    ].map(m => (
+                      <button key={m.id} onClick={() => setPayment(m.id)}
+                        className={`py-3 px-2 rounded-2xl text-xs font-black border-2 transition-all ${payment === m.id ? "border-primary bg-primary/10 text-primary" : "border-slate-100 dark:border-white/10 text-slate-500"}`}>
+                        {m.label}
+                      </button>
+                    ))}
                   </div>
-                )}
+
+                  {payment === "card" && (
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="col-span-2">
+                        <Label className="text-slate-500 dark:text-slate-400 text-[10px] font-black uppercase tracking-widest mb-2 block">Card Number</Label>
+                        <Input placeholder="1234 5678 9012 3456" className="h-12 rounded-2xl border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-slate-800 font-bold" />
+                      </div>
+                      <div>
+                        <Label className="text-slate-500 dark:text-slate-400 text-[10px] font-black uppercase tracking-widest mb-2 block">Expiry</Label>
+                        <Input placeholder="MM/YY" className="h-12 rounded-2xl border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-slate-800 font-bold" />
+                      </div>
+                      <div>
+                        <Label className="text-slate-500 dark:text-slate-400 text-[10px] font-black uppercase tracking-widest mb-2 block">CVV</Label>
+                        <Input placeholder="•••" className="h-12 rounded-2xl border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-slate-800 font-bold" />
+                      </div>
+                    </div>
+                  )}
+                  {payment === "upi" && (
+                    <div>
+                      <Label className="text-slate-500 dark:text-slate-400 text-[10px] font-black uppercase tracking-widest mb-2 block">UPI ID</Label>
+                      <Input placeholder="yourname@upi" className="h-12 rounded-2xl border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-slate-800 font-bold" />
+                    </div>
+                  )}
+                  {payment === "netbanking" && (
+                    <div>
+                      <Label className="text-slate-500 dark:text-slate-400 text-[10px] font-black uppercase tracking-widest mb-2 block">Select Bank</Label>
+                      <select className="w-full h-12 rounded-2xl border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-slate-800 px-4 font-bold text-slate-700 dark:text-slate-200 text-sm">
+                        <option>State Bank of India</option>
+                        <option>HDFC Bank</option>
+                        <option>ICICI Bank</option>
+                        <option>Axis Bank</option>
+                        <option>Kotak Mahindra Bank</option>
+                      </select>
+                    </div>
+                  )}
+                  {payment === "cod" && (
+                    <div className="bg-amber-50 dark:bg-amber-500/10 rounded-2xl border border-amber-100 dark:border-amber-500/20 p-4">
+                      <p className="text-sm font-bold text-amber-700 dark:text-amber-400">Cash on Delivery</p>
+                      <p className="text-xs text-amber-600/80 mt-1">Please keep exact change ready. A ₹20 COD fee may apply.</p>
+                    </div>
+                  )}
+                </div>
 
                 <div className="flex gap-4">
-                  <Button onClick={() => setStep(0)} variant="outline" className="border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-2xl h-14 flex-1 font-black uppercase tracking-widest text-xs">← Back</Button>
-                  <Button onClick={() => setStep(2)} className="bg-primary hover:opacity-90 text-primary-foreground rounded-2xl h-14 flex-1 gap-3 font-black uppercase tracking-widest transition-all active:scale-95 shadow-xl shadow-primary/20">
-                    Review Order →
-                  </Button>
+                  <Button onClick={() => setStep(0)} variant="outline" className="border-slate-200 dark:border-slate-700 rounded-2xl h-14 flex-1 font-black uppercase tracking-widest text-xs">← Back</Button>
+                  <Button onClick={() => setStep(2)} className="bg-primary rounded-2xl h-14 flex-1 font-black uppercase tracking-widest transition-all active:scale-95 shadow-xl shadow-primary/20">Review Order →</Button>
                 </div>
               </div>
             )}

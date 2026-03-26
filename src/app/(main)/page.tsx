@@ -295,21 +295,21 @@ export default function HomePage() {
   return (
     <main className="min-h-screen bg-white dark:bg-[#08090a] text-foreground overflow-hidden">
       {/* ── MINIMALIST SEARCH HERO ── */}
-      <section ref={targetRef} className="relative h-[60vh] md:h-[85vh] min-h-[450px] md:min-h-[650px] overflow-hidden flex items-start justify-center pt-12 md:pt-12">
+      <section ref={targetRef} className="relative h-[55vh] md:h-[85vh] min-h-[380px] md:min-h-[650px] overflow-hidden flex items-start justify-center pt-6 md:pt-7">
         <HeroVideoBackground />
 
         <motion.div
           style={{ opacity: contentOpacity, scale: contentScale }}
-          className="container mx-auto px-4 relative z-30 flex flex-col items-center text-center"
+          className="container mx-auto px-4 relative z-30 flex flex-col items-center text-center mt-2 md:mt-0"
         >
-          <div className="max-w-4xl w-full space-y-6">
+          <div className="max-w-4xl w-full">
             {/* Minimalist Powerful Heading */}
-            <div className="space-y-1">
-                <motion.h1
-                initial={{ opacity: 0, y: 30 }}
+            <div className="mb-6 md:mb-10">
+              <motion.h1
+                initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-                className="text-4xl md:text-8xl font-black text-slate-950 dark:text-white leading-[0.95] tracking-tighter"
+                className="text-4xl sm:text-5xl md:text-8xl font-black text-slate-950 dark:text-white leading-[0.95] tracking-tighter"
               >
                 Find what you need<br />
                 <span className="text-primary italic">In seconds.</span>
@@ -317,64 +317,63 @@ export default function HomePage() {
               <motion.p
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ delay: 0.4 }}
-                className="text-slate-700 dark:text-slate-300 text-base md:text-xl font-bold drop-shadow-sm opacity-80"
+                transition={{ delay: 0.3 }}
+                className="mt-3 text-slate-600 dark:text-slate-300 text-sm md:text-xl font-bold tracking-wide drop-shadow-sm opacity-90"
               >
-                Everything for your home, delivered with speed.
+                Everything for your home, delivered fast.
               </motion.p>
             </div>
 
             {/* Unified "Tagda" Search Interface with True 3D Shared Element Flight */}
-            <div className="relative w-full min-h-28 flex flex-col items-center">
+            <div className="relative w-full min-h-20 md:min-h-28 flex flex-col items-center">
               {isHeroSearchVisible && (
-                <MainSearchBar variant="hero" />
+                <div className="w-full max-w-2xl md:max-w-4xl px-2 md:px-0">
+                  <MainSearchBar variant="hero" />
+                </div>
               )}
 
               {/* Elite Trending Searches Grid */}
-              <div className="flex flex-col items-center w-full mt-8 md:mt-10 space-y-4 px-4 overflow-visible">
+              <div className="flex flex-col items-center w-full mt-6 md:mt-10 space-y-3 px-2 overflow-visible">
                 <motion.div 
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.4 }}
-                  className="flex items-center gap-2"
+                  className="flex items-center gap-1.5"
                 >
-                  <Sparkles className="w-3.5 h-3.5 text-primary animate-pulse drop-shadow-[0_0_8px_rgba(var(--primary),0.5)]" />
-                  <span className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 dark:text-slate-500">Popular Searches</span>
+                  <Sparkles className="w-3.5 h-3.5 md:w-4 md:h-4 text-primary animate-pulse drop-shadow-[0_0_8px_rgba(var(--primary),0.5)]" />
+                  <span className="text-[9px] md:text-[11px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">Trending Now</span>
                 </motion.div>
 
-                <div className="flex flex-wrap justify-center gap-2.5 max-w-sm md:max-w-xl">
+                <div className="flex flex-nowrap md:flex-wrap overflow-x-auto w-full md:justify-center gap-2 pb-2 md:pb-0 no-scrollbar snap-x">
                   {trendingSearches.map((tag, i) => (
                     <motion.button
                       key={tag}
                       initial={{ opacity: 0, scale: 0.9 }}
                       animate={{ opacity: 1, scale: 1 }}
-                      whileHover={{ scale: 1.05, y: -2, backgroundColor: "rgba(var(--primary), 0.05)" }}
+                      whileHover={{ scale: 1.05, y: -2, borderColor: "rgba(var(--primary), 0.4)" }}
                       whileTap={{ scale: 0.95 }}
                       transition={{ 
                         type: "spring",
                         stiffness: 400,
                         damping: 25,
-                        delay: 0.5 + (i * 0.08) 
+                        delay: 0.4 + (i * 0.05) 
                       }}
-                      className="group relative px-4 py-2 rounded-xl bg-white/50 dark:bg-white/5 border border-slate-200/60 dark:border-white/10 text-[10px] md:text-xs font-bold text-slate-600 dark:text-slate-400 hover:text-primary hover:border-primary/40 transition-all backdrop-blur-md shadow-sm hover:shadow-primary/5"
+                      className="snap-center shrink-0 group relative px-4 py-2 rounded-full bg-white/80 dark:bg-slate-900/50 border border-slate-200/80 dark:border-white/10 text-[11px] md:text-xs font-bold text-slate-700 dark:text-slate-300 hover:text-primary transition-all backdrop-blur-md shadow-sm active:bg-slate-100 dark:active:bg-slate-800"
                     >
-                      <span className="relative z-10 uppercase tracking-wider">{tag}</span>
-                      <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/5 transition-colors rounded-xl" />
+                      <span className="relative z-10 whitespace-nowrap">{tag}</span>
                     </motion.button>
                   ))}
                 </div>
               </div>
             </div>
           </div>
-
-
         </motion.div>
       </section>
 
       {/* ── TRUST BAR ── */}
-      <section className="relative z-40 -mt-24">
+      <section className="relative z-40 -mt-16 md:-mt-24">
         <div className="container mx-auto px-4">
-          <div className="flex flex-wrap lg:flex-nowrap gap-6 justify-center">
+          <div className="flex flex-col md:flex-row md:flex-wrap lg:flex-nowrap gap-4 md:gap-6 justify-center">
             {promoOffers.map((offer, i) => (
               <motion.div
                 key={i}
@@ -382,7 +381,7 @@ export default function HomePage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1, duration: 0.6, ease: "easeOut" }}
-                className={`flex-1 min-w-[300px] md:min-w-[400px] relative overflow-hidden rounded-[2rem] ${offer.color} p-8 md:p-10 flex flex-col justify-between group cursor-pointer transition-transform hover:-translate-y-2 shadow-sm border border-slate-100 dark:border-white/5 h-[200px] md:h-[240px]`}
+                className={`flex-1 w-full md:min-w-[400px] relative overflow-hidden rounded-[2rem] ${offer.color} p-6 md:p-10 flex flex-col justify-between group cursor-pointer transition-transform hover:-translate-y-2 shadow-sm border border-slate-100 dark:border-white/5 h-[180px] md:h-[240px]`}
               >
                 <div className="relative z-10 w-[60%] h-full flex flex-col justify-center">
                   <div className="space-y-2 mb-6">
@@ -476,22 +475,29 @@ export default function HomePage() {
       {/* ── REFINED FULL WIDTH OFFER BANNER ── */}
       <section className="w-full pb-12 md:pb-16 relative">
         {/* Banner Background Layer - Clipped */}
-        <div className="absolute inset-0 h-[400px] md:h-[250px] bg-gradient-to-r from-primary/5 via-primary/10 to-transparent dark:from-primary/10 dark:via-primary/20 dark:to-transparent overflow-hidden" />
+        <div className="absolute inset-x-4 md:inset-x-0 inset-y-0 md:inset-y-0 h-auto md:h-[250px] bg-gradient-to-r from-primary/5 via-primary/10 to-transparent dark:from-primary/10 dark:via-primary/20 dark:to-transparent overflow-hidden bottom-12 md:bottom-auto rounded-[2rem] md:rounded-none shadow-sm md:shadow-none" />
         
-        <div className="relative h-[400px] md:h-[250px] w-full flex items-center">
+        <div className="relative h-auto md:h-[250px] w-full flex items-center pt-8 md:pt-0 pb-16 md:pb-0 px-4 md:px-0">
           {/* Subtle Background Elements (inside clipped layer or separate) */}
-          <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-white/50 dark:from-black/20 to-transparent pointer-events-none overflow-hidden" />
+          <div className="absolute top-0 right-4 md:right-0 w-[calc(100%-2rem)] md:w-1/2 h-full bg-gradient-to-l from-white/30 dark:from-black/20 to-transparent pointer-events-none overflow-hidden rounded-[2rem] md:rounded-none" />
           
           <div className="container mx-auto h-full px-6 relative">
-            <div className="flex flex-col md:flex-row h-full items-center gap-8 md:gap-12">
+            <div className="flex flex-col md:flex-row h-full items-center gap-6 md:gap-12">
 
               {/* Left Content */}
-              <div className="flex-1 z-20 py-8 md:py-0 text-center md:text-left">
-                <h3 className="text-3xl md:text-5xl lg:text-6xl font-black text-slate-900 dark:text-white leading-[1] tracking-tighter mb-4 whitespace-nowrap">
-                  Back to School <span className="text-primary">Essentials.</span>
+              <div className="flex-1 z-20 text-center md:text-left order-2 md:order-1 flex flex-col items-center md:items-start pb-4 md:pb-0">
+                <h3 className="text-4xl sm:text-5xl lg:text-6xl font-black text-slate-900 dark:text-white leading-[1.05] tracking-tighter mb-4">
+                  Back to School <br className="block md:hidden" />
+                  <span className="text-primary italic">Essentials.</span>
                 </h3>
 
-                <div className="mb-6 flex justify-center md:justify-start">
+                <p className="text-slate-600 dark:text-slate-400 text-xs md:text-lg font-bold tracking-tight mb-6 md:mb-8 flex flex-col md:flex-row items-center gap-2">
+                  <span className="opacity-80">GET FLAT</span> 
+                  <span className="text-2xl md:text-3xl font-black text-primary px-3 py-1 bg-primary/10 rounded-xl">50% OFF</span> 
+                  <span className="opacity-80">ON EVERYTHING</span>
+                </p>
+
+                <div className="flex justify-center md:justify-start">
                   <button className="group/shop relative px-8 py-3 bg-primary text-white font-black text-xs uppercase tracking-[0.2em] rounded-full overflow-hidden shadow-lg shadow-primary/20 hover:shadow-primary/40 transition-all duration-300 active:scale-95">
                     <span className="relative z-10 flex items-center gap-2">
                       Shop Now <ArrowRight className="w-4 h-4 group-hover/shop:translate-x-1 transition-transform" />
@@ -499,21 +505,17 @@ export default function HomePage() {
                     <div className="absolute inset-0 bg-white/20 translate-y-full group-hover/shop:translate-y-0 transition-transform duration-300" />
                   </button>
                 </div>
-
-                <p className="text-slate-600 dark:text-slate-400 text-xs md:text-lg font-bold tracking-tight mb-0">
-                  GET FLAT <span className="text-xl md:text-3xl font-black text-primary px-2 bg-primary/10 rounded-lg">50% OFF</span> ON EVERYTHING
-                </p>
               </div>
 
               {/* Right Media - LARGE TOP-ONLY OVERFLOW */}
-              <div className="flex-1 relative h-full w-full pointer-events-none min-h-[300px] md:min-h-0 z-30">
-                <div className="absolute inset-x-0 top-[-40%] bottom-[5%] flex items-end justify-center md:justify-end">
-                  <div className="relative w-[180%] h-[105%] md:w-[200%] md:h-[105%] transform rotate-3 group-hover:rotate-0 transition-all duration-1000 ease-out">
+              <div className="w-full md:flex-1 relative h-[250px] sm:h-[300px] md:h-full pointer-events-none z-30 order-1 md:order-2">
+                <div className="absolute inset-x-0 bottom-[-10%] h-[120%] md:top-[-40%] md:bottom-[5%] md:h-auto flex items-end justify-center md:justify-end">
+                  <div className="relative w-full h-full md:w-[200%] md:h-[105%] transform rotate-0 md:rotate-3 group-hover:rotate-0 transition-all duration-1000 ease-out origin-bottom mt-[-15%] md:mt-0">
                     <Image
                       src="/front-view-back-school-concept-with-copy-space__2_.png"
                       alt="Premium School Supplies"
                       fill
-                      className="object-contain object-bottom md:object-right-bottom drop-shadow-[0_50px_80px_rgba(0,0,0,0.2)] dark:drop-shadow-[0_50px_80px_rgba(255,255,255,0.08)]"
+                      className="object-contain object-bottom md:object-right-bottom drop-shadow-[0_30px_50px_rgba(0,0,0,0.15)] dark:drop-shadow-[0_50px_80px_rgba(255,255,255,0.08)]"
                       priority
                     />
                   </div>
@@ -603,59 +605,59 @@ export default function HomePage() {
       </section>
 
       {/* ── MOBILE APP DOWNLOAD SECTION ── */}
-      <section className="container mx-auto">
-        <div className="relative overflow-hidden  bg-primary/[0.03] dark:bg-primary/[0.02]  p-8 md:p-16">
+      <section className="container mx-auto px-4 md:px-0">
+        <div className="relative overflow-hidden rounded-[2rem] md:rounded-none bg-primary/[0.03] dark:bg-primary/[0.02] border border-primary/5 dark:border-primary/10 md:border-transparent p-6 sm:p-8 md:p-16">
           {/* Decorative background blur */}
-          <div className="absolute top-0 right-0 w-1/2 h-full bg-primary/5 blur-[100px] pointer-events-none" />
+          <div className="absolute top-0 right-0 w-full md:w-1/2 h-full bg-primary/5 blur-[80px] pointer-events-none" />
           
-          <div className="relative flex flex-col md:flex-row items-center gap-12">
+          <div className="relative flex flex-col md:flex-row items-center gap-8 md:gap-12">
             {/* Left Content */}
-            <div className="flex-1 text-center md:text-left">
-              <Badge className="mb-4 md:mb-6 bg-primary/10 text-primary border-primary/20 px-4 py-1 rounded-full uppercase tracking-widest text-[9px] font-black">Mobile Experience</Badge>
-              <h2 className="text-3xl md:text-5xl font-black text-slate-900 dark:text-white mb-4 md:mb-6 leading-[1.1] tracking-tighter">
-                Shop on the go with our <br />
+            <div className="flex-1 text-center md:text-left mt-4 md:mt-0">
+              <Badge className="mb-4 md:mb-6 bg-primary/10 text-primary border-primary/20 px-3 py-1 rounded-full uppercase tracking-widest text-[9px] md:text-[10px] font-black">Mobile Experience</Badge>
+              <h2 className="text-2xl sm:text-3xl md:text-5xl font-black text-slate-900 dark:text-white mb-3 md:mb-6 leading-[1.1] tracking-tighter">
+                Shop on the go with our <br className="hidden sm:block" />
                 <span className="text-primary">Premium Mobile App.</span>
               </h2>
-              <p className="text-slate-600 dark:text-slate-400 mb-8 md:mb-10 text-base md:text-lg font-medium max-w-lg leading-relaxed">
+              <p className="text-slate-600 dark:text-slate-400 mb-6 md:mb-10 text-sm md:text-lg font-medium max-w-lg leading-relaxed mx-auto md:mx-0">
                 Get the best deals, real-time tracking, and exclusive app-only rewards. Download now and start your premium shopping journey.
               </p>
               
-              <div className="flex flex-wrap justify-center md:justify-start gap-4">
+              <div className="flex flex-col sm:flex-row justify-center md:justify-start gap-3 md:gap-4">
                 {/* App Store Button */}
-                <button className="flex items-center gap-3 bg-slate-950 dark:bg-white text-white dark:text-slate-950 px-6 py-3 rounded-2xl hover:bg-primary dark:hover:bg-primary hover:text-white dark:hover:text-white ">
-                  <div className="w-8 h-8 relative">
+                <button className="flex items-center justify-center gap-3 bg-slate-950 dark:bg-white text-white dark:text-slate-950 px-5 py-3 md:px-6 md:py-3 rounded-2xl hover:bg-primary dark:hover:bg-primary hover:text-white dark:hover:text-white w-full sm:w-auto shadow-sm">
+                  <div className="w-6 h-6 md:w-8 md:h-8 relative">
                     <svg viewBox="0 0 384 512" className="w-full h-full fill-current">
                       <path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 21.8-88.5 21.8-11.4 0-51.1-20.8-83.6-20.2-42.3.8-81.3 24.7-103 62.5-44.5 77.4-11.4 191.2 31.9 253.5 21.3 30.6 46.3 64.6 79.1 63.3 31.1-1.3 43.1-20.3 80.5-20.3 37.2 0 48.4 20.3 80.8 19.7 33.7-.6 55.4-30.8 76.5-61.4 24.4-35.4 34.4-69.7 34.6-71.3-.8-.3-66.8-25.6-67.1-102.6zm-50.6-180.3c15.8-19.1 27-45.7 24.1-72.3-22.9 1.1-50.6 15.6-67 34.6-14.7 16.9-27.5 44.4-24.1 70.3 25.5 2 51.2-13.5 67-32.6z"/>
                     </svg>
                   </div>
                   <div className="text-left">
-                    <div className="text-[10px] font-bold uppercase tracking-widest opacity-70">Download on</div>
-                    <div className="text-lg font-black leading-tight">App Store</div>
+                    <div className="text-[9px] md:text-[10px] font-bold uppercase tracking-widest opacity-70">Download on</div>
+                    <div className="text-sm md:text-lg font-black leading-tight">App Store</div>
                   </div>
                 </button>
 
                 {/* Play Store Button */}
-                <button className="flex items-center gap-3 bg-slate-950 dark:bg-white text-white dark:text-slate-950 px-6 py-3 rounded-2xl hover:bg-primary dark:hover:bg-primary hover:text-white dark:hover:text-white transition-all shadow-xl active:scale-95 group">
-                  <div className="w-8 h-8 relative">
+                <button className="flex items-center justify-center gap-3 bg-slate-950 dark:bg-white text-white dark:text-slate-950 px-5 py-3 md:px-6 md:py-3 rounded-2xl hover:bg-primary dark:hover:bg-primary hover:text-white dark:hover:text-white transition-all shadow-md active:scale-95 group w-full sm:w-auto">
+                  <div className="w-6 h-6 md:w-8 md:h-8 relative">
                     <svg viewBox="0 0 512 512" className="w-full h-full fill-current">
                       <path d="M325.3 234.3L104.6 13l280.8 161.2-60.1 60.1zM47 0C34 6.8 25.3 19.2 25.3 35.3v441.3c0 16.1 8.7 28.5 21.7 35.3l256.6-256L47 0zm425.2 225.6l-58.9-34.1-65.7 64.5 65.7 64.5 60.1-34.1c18-10.3 18-28.5-1.2-40.8zM325.3 277.7l60.1 60.1L104.6 499l220.7-221.3z"/>
                     </svg>
                   </div>
                   <div className="text-left">
-                    <div className="text-[10px] font-bold uppercase tracking-widest opacity-70">Get it on</div>
-                    <div className="text-lg font-black leading-tight">Google Play</div>
+                    <div className="text-[9px] md:text-[10px] font-bold uppercase tracking-widest opacity-70">Get it on</div>
+                    <div className="text-sm md:text-lg font-black leading-tight">Google Play</div>
                   </div>
                 </button>
               </div>
             </div>
 
             {/* Right Media Mockup */}
-            <div className="flex-1 relative w-full h-[400px] md:h-[500px]">
-              <div className="absolute inset-0 flex items-center justify-center">
+            <div className="flex-1 relative w-full h-[380px] sm:h-[450px] md:h-[500px] mt-2 md:mt-0 pb-8 md:pb-0">
+              <div className="absolute inset-0 flex items-center justify-center overflow-hidden">
                 {/* Visual Glow behind phone */}
-                <div className="absolute w-[80%] h-[80%] bg-primary/20 rounded-full blur-[80px]" />
+                <div className="absolute w-[80%] h-[80%] bg-primary/20 rounded-full blur-[60px]" />
                 
-                <div className="relative w-[280px] h-[550px] md:w-[320px] md:h-[620px] transition-all duration-1000 ease-out">
+                <div className="relative w-[280px] h-[580px] md:w-[320px] md:h-[620px] transition-all duration-1000 ease-out origin-top scale-[0.65] sm:scale-75 md:scale-100 translate-y-8 md:translate-y-0">
                   <div className="absolute inset-0 rounded-[3rem] border-[12px] border-slate-900 dark:border-slate-800 shadow-2xl overflow-hidden bg-white dark:bg-slate-950">
                     {/* Simulated App UI */}
                     <div className="relative h-full w-full flex flex-col pt-10 px-4">
