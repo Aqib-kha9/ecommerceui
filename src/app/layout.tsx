@@ -8,6 +8,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { SearchProvider } from "@/components/SearchContext";
 import { FontProvider } from "@/components/FontProvider";
+import { AuthProvider } from "@/components/AuthContext";
 
 /* ─── Font Definitions ─────────────────────────── */
 const geistSans  = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
@@ -40,9 +41,11 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       <body className="antialiased">
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
           <SearchProvider>
-            <FontProvider>
-              {children}
-            </FontProvider>
+            <AuthProvider>
+              <FontProvider>
+                {children}
+              </FontProvider>
+            </AuthProvider>
           </SearchProvider>
         </ThemeProvider>
       </body>

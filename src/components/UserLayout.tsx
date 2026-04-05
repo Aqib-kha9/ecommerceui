@@ -15,42 +15,42 @@ import { Badge } from "@/components/ui/badge";
 /* ─── Nav structure ───────────────────────────── */
 const navGroups = [
   {
-    title: "My Account",
+    title: "Account",
     items: [
-      { href: "/profile",            icon: User,       label: "Profile",        badge: null },
-      { href: "/profile/addresses",  icon: MapPin,     label: "Addresses",      badge: null },
+      { href: "/dashboard",          icon: LayoutDashboard, label: "Dashboard",      badge: null },
+      { href: "/profile",            icon: User,            label: "Profile Info",   badge: null },
+      { href: "/profile/addresses",  icon: MapPin,          label: "Addresses",      badge: null },
     ],
   },
   {
-    title: "Shopping",
+    title: "Activities",
     items: [
-      { href: "/orders",   icon: ShoppingBag, label: "Orders",   badge: "3" },
-      { href: "/packages", icon: Package,     label: "Packages", badge: null },
-      { href: "/coupons",  icon: Tag,         label: "Coupons",  badge: "5" },
+      { href: "/orders",   icon: ShoppingBag, label: "My Orders",   badge: "3" },
+      { href: "/coupons",  icon: Tag,         label: "Coupons",     badge: "5" },
     ],
   },
   {
-    title: "Finance",
+    title: "Wallet & Referral",
     items: [
-      { href: "/wallet",   icon: Wallet, label: "Wallet",    badge: "₹1,250" },
-      { href: "/referral", icon: Gift,   label: "Refer & Earn", badge: null },
+      { href: "/wallet",   icon: Wallet, label: "My Wallet",       badge: "₹1,250" },
+      { href: "/referral", icon: Gift,   label: "Refer & Earn",    badge: null },
     ],
   },
   {
-    title: "Preferences",
+    title: "Support",
     items: [
-      { href: "/notifications", icon: Bell,     label: "Notifications", badge: "5" },
-      { href: "/settings",      icon: Settings, label: "Settings",      badge: null },
+      { href: "/notifications", icon: Bell,     label: "Notifications",     badge: "5" },
+      { href: "/settings",      icon: Settings, label: "Language Settings", badge: null },
     ],
   },
 ];
 
 const mobileNav = [
-  { href: "/",             icon: Home,       label: "Shop",    exact: true },
-  { href: "/orders",       icon: ShoppingBag,label: "Orders" },
-  { href: "/wallet",       icon: Wallet,     label: "Wallet" },
-  { href: "/notifications",icon: Bell,       label: "Alerts" },
-  { href: "/profile",      icon: User,       label: "Profile" },
+  { href: "/dashboard",    icon: LayoutDashboard, label: "Home" },
+  { href: "/orders",       icon: ShoppingBag,     label: "Orders" },
+  { href: "/wallet",       icon: Wallet,          label: "Wallet" },
+  { href: "/packages",     icon: Package,         label: "Packages" },
+  { href: "/profile",      icon: User,            label: "Account" },
 ];
 
 /* ─── Helpers ─────────────────────────────────── */
@@ -138,29 +138,6 @@ export default function UserLayout({ children, title, subtitle }: UserLayoutProp
         {/* ── Desktop Sidebar ──────────────────────────── */}
         <aside className="hidden lg:flex flex-col w-60 fixed left-0 top-14 bottom-0 bg-white dark:bg-[#0d1117] border-r border-slate-200/80 dark:border-white/[0.06] z-40 overflow-y-auto">
 
-          {/* User card */}
-          <div className="p-4 border-b border-slate-100 dark:border-white/[0.05]">
-            <div className="flex items-center gap-3">
-              <div className="relative w-10 h-10 rounded-2xl overflow-hidden ring-2 ring-primary/20 shrink-0">
-                <Image src="https://api.dicebear.com/7.x/avataaars/svg?seed=Ravi" alt="User" fill className="object-cover" />
-              </div>
-              <div className="min-w-0">
-                <p className="font-black text-[13px] text-slate-900 dark:text-white truncate">Ravi Kumar</p>
-                <Badge className="bg-primary/10 text-primary border-0 text-[9px] font-black rounded-full px-2 mt-0.5">Premium Member</Badge>
-              </div>
-            </div>
-            {/* Mini stats */}
-            <div className="grid grid-cols-2 gap-2 mt-3">
-              <div className="bg-slate-50 dark:bg-white/[0.04] rounded-xl px-3 py-2 text-center">
-                <p className="font-black text-sm text-slate-800 dark:text-white">12</p>
-                <p className="text-[9px] text-slate-400 font-semibold uppercase tracking-wider">Orders</p>
-              </div>
-              <div className="bg-primary/5 rounded-xl px-3 py-2 text-center">
-                <p className="font-black text-sm text-primary">₹1,250</p>
-                <p className="text-[9px] text-slate-400 font-semibold uppercase tracking-wider">Wallet</p>
-              </div>
-            </div>
-          </div>
 
           {/* Nav groups */}
           <nav className="flex-1 px-3 py-3 space-y-4 overflow-y-auto">
@@ -223,18 +200,6 @@ export default function UserLayout({ children, title, subtitle }: UserLayoutProp
                     <X className="w-4 h-4" />
                   </button>
                 </div>
-                {/* User */}
-                <div className="p-4 border-b border-slate-100 dark:border-white/[0.05]">
-                  <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 rounded-2xl overflow-hidden ring-2 ring-primary/20">
-                      <Image src="https://api.dicebear.com/7.x/avataaars/svg?seed=Ravi" alt="User" width={48} height={48} className="object-cover" />
-                    </div>
-                    <div>
-                      <p className="font-black text-[14px] text-slate-900 dark:text-white">Ravi Kumar</p>
-                      <p className="text-xs text-slate-400">ravi.kumar@email.com</p>
-                    </div>
-                  </div>
-                </div>
                 {/* Nav */}
                 <nav className="flex-1 px-3 py-3 space-y-4 overflow-y-auto">
                   {navGroups.map((group) => (
@@ -271,23 +236,25 @@ export default function UserLayout({ children, title, subtitle }: UserLayoutProp
         </AnimatePresence>
 
         {/* ── Main Content ─────────────────────────────── */}
-        <main className="flex-1 lg:ml-60 min-h-[calc(100vh-3.5rem)]">
-          {/* Content header bar */}
-          <div className="bg-white dark:bg-[#0d1117] border-b border-slate-200/80 dark:border-white/[0.06] px-6 py-4 flex items-center justify-between">
-            <div>
-              <h1 className="text-xl font-black text-slate-900 dark:text-white tracking-tight">{title}</h1>
-              {subtitle && <p className="text-xs text-slate-500 dark:text-slate-400 font-medium mt-0.5">{subtitle}</p>}
+        <main className="flex-1 lg:ml-60 min-h-[calc(100vh-3.5rem)] overflow-x-hidden">
+          <div className="max-w-[1440px] mx-auto w-full">
+            {/* Content header bar */}
+            <div className="bg-white dark:bg-[#0d1117] border-b border-slate-200/80 dark:border-white/[0.06] px-6 py-4 flex items-center justify-between">
+              <div>
+                <h1 className="text-xl font-black text-slate-900 dark:text-white tracking-tight">{title}</h1>
+                {subtitle && <p className="text-xs text-slate-500 dark:text-slate-400 font-medium mt-0.5">{subtitle}</p>}
+              </div>
+              <div className="flex items-center gap-2">
+                <Link href="/packages" className="hidden sm:flex items-center gap-1.5 h-8 px-3 rounded-xl bg-primary text-white text-xs font-black shadow-lg shadow-primary/25 hover:opacity-90 transition-opacity">
+                  <ShoppingBag className="w-3.5 h-3.5" /> Shop Now
+                </Link>
+              </div>
             </div>
-            <div className="flex items-center gap-2">
-              <Link href="/packages" className="hidden sm:flex items-center gap-1.5 h-8 px-3 rounded-xl bg-primary text-white text-xs font-black shadow-lg shadow-primary/25 hover:opacity-90 transition-opacity">
-                <ShoppingBag className="w-3.5 h-3.5" /> Shop Now
-              </Link>
-            </div>
-          </div>
 
-          {/* Page body */}
-          <div className="p-4 sm:p-6 pb-28 lg:pb-6">
-            {children}
+            {/* Page body */}
+            <div className="p-4 sm:p-6 pb-28 lg:pb-12">
+              {children}
+            </div>
           </div>
         </main>
       </div>
@@ -295,8 +262,8 @@ export default function UserLayout({ children, title, subtitle }: UserLayoutProp
       {/* ══ MOBILE BOTTOM NAV ═════════════════════════════ */}
       <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 dark:bg-[#0d1117]/95 backdrop-blur-xl border-t border-slate-200/80 dark:border-white/[0.06]">
         <div className="flex items-stretch justify-around px-1">
-          {mobileNav.map(({ href, icon: Icon, label, exact }) => {
-            const active = isActive(href, exact);
+          {mobileNav.map(({ href, icon: Icon, label }) => {
+            const active = isActive(href);
             return (
               <Link key={href} href={href} className="flex flex-col items-center gap-0.5 py-2 px-2 flex-1 relative">
                 {active && (

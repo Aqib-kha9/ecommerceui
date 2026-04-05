@@ -39,6 +39,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { useSearch } from "./SearchContext";
+import { useAuth } from "./AuthContext";
 import { motion, AnimatePresence } from "framer-motion";
 import MainSearchBar from "./MainSearchBar";
 import { cn } from "@/lib/utils";
@@ -56,6 +57,7 @@ const navLinks = [
 
 export default function Navbar() {
   const { searchQuery, setSearchQuery, isHeroSearchVisible, setIsHeroSearchVisible } = useSearch();
+  const { isLoggedIn, logout } = useAuth();
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [deliveryMode, setDeliveryMode] = useState<"fast" | "scheduled">("fast");
   const [selectedLang, setSelectedLang] = useState("EN");
@@ -114,9 +116,20 @@ export default function Navbar() {
 
             {/* Mobile-only User Actions (User Icon) */}
             <div className="md:hidden flex items-center gap-2">
-              <Button variant="ghost" size="icon" className="w-10 h-10 rounded-full bg-slate-50 border border-slate-100 dark:bg-white/10 dark:border-white/5 text-slate-600 dark:text-slate-300 shadow-sm hover:shadow-md transition-all">
-                <User className="w-4 h-4" />
-              </Button>
+              {!isLoggedIn ? (
+                <Link href="/login">
+                  <Button variant="ghost" size="icon" className="w-10 h-10 rounded-full bg-slate-50 border border-slate-100 dark:bg-white/10 dark:border-white/5 text-slate-600 dark:text-slate-300 shadow-sm hover:shadow-md transition-all">
+                    <User className="w-4 h-4" />
+                  </Button>
+                </Link>
+              ) : (
+                <Link href="/dashboard">
+                  <Avatar className="w-10 h-10 border-2 border-primary/20">
+                    <AvatarImage src="https://api.dicebear.com/7.x/avataaars/svg?seed=Ravi" />
+                    <AvatarFallback className="bg-primary text-white text-xs font-black">RK</AvatarFallback>
+                  </Avatar>
+                </Link>
+              )}
             </div>
           </div>
 
@@ -230,10 +243,25 @@ export default function Navbar() {
 
               <div className="w-[1px] h-6 bg-slate-200 dark:bg-white/10 mx-2" />
 
-              {/* User Account Menu (Desktop) */}
-              <DropdownMenu>
-                <DropdownMenuTrigger
-                  render={
+              {/* User Account Section (Desktop) */}
+              {!isLoggedIn ? (
+                <div className="flex items-center gap-2">
+                  <Link href="/login">
+                    <Button variant="ghost" className="text-xs font-black uppercase tracking-widest text-slate-600 dark:text-slate-400 hover:text-primary transition-all px-4 h-11 rounded-xl">
+                      Login
+                    </Button>
+                  </Link>
+                  <Link href="/register">
+                    <Button className="bg-primary text-white text-xs font-black uppercase tracking-widest px-5 h-11 rounded-xl shadow-lg shadow-primary/20 hover:shadow-primary/40 transition-all hover:scale-[1.02] active:scale-95">
+                      Join Elite
+                    </Button>
+                  </Link>
+                </div>
+              ) : (
+                <DropdownMenu>
+                  <DropdownMenuTrigger
+                    asChild
+                  >
                     <Button variant="ghost" className="gap-3 text-slate-700 dark:text-slate-300 hover:bg-primary/5 pl-1 pr-3 h-11 rounded-2xl group transition-all">
                       <Avatar className="w-8 h-8 ring-2 ring-transparent group-hover:ring-primary/30 transition-all">
                         <AvatarImage src="https://api.dicebear.com/7.x/avataaars/svg?seed=Ravi" />
@@ -244,39 +272,44 @@ export default function Navbar() {
                         <span className="text-xs font-bold text-slate-900 dark:text-white">Ravi Kumar</span>
                       </div>
                     </Button>
-                  }
-                />
-                <DropdownMenuContent align="end" className="w-72 bg-white dark:bg-slate-900 border-slate-200 dark:border-white/10 p-2 rounded-[1.5rem] shadow-2xl mt-2 overflow-hidden">
-                  <div className="px-4 py-3 font-black text-slate-950 dark:text-white text-base tracking-tighter uppercase">My Space</div>
-                  <DropdownMenuSeparator className="bg-slate-100 dark:bg-white/5 mx-2 mb-1" />
-                  <div className="p-1 space-y-0.5">
-                    {[
-                      { href: "/profile", icon: User, label: "Profile", desc: "Edit your info" },
-                      { href: "/orders", icon: ShoppingBag, label: "My Orders", desc: "Track & manage orders" },
-                      { href: "/wallet", icon: Wallet, label: "My Wallet", desc: "₹1,250 available" },
-                      { href: "/referral", icon: Gift, label: "Refer & Earn", desc: "Earn ₹100 per referral" },
-                      { href: "/coupons", icon: Tag, label: "My Coupons", desc: "View available offers" },
-                      { href: "/notifications", icon: Bell, label: "Notifications", desc: "5 unread" },
-                      { href: "/settings", icon: Settings, label: "Settings", desc: "Language & preferences" },
-                    ].map(({ href, icon: Icon, label, desc }) => (
-                      <DropdownMenuItem key={href} render={<Link href={href} />} className="px-4 py-2.5 rounded-xl text-slate-700 dark:text-slate-300 hover:text-primary hover:bg-primary/5 cursor-pointer gap-3 font-bold transition-all h-auto">
-                        <div className="w-8 h-8 rounded-lg bg-slate-100 dark:bg-white/5 flex items-center justify-center text-slate-400 shrink-0">
-                          <Icon className="w-4 h-4" />
-                        </div>
-                        <div className="flex flex-col items-start">
-                          <span className="text-sm font-bold">{label}</span>
-                          <span className="text-[11px] text-slate-400 font-normal">{desc}</span>
-                        </div>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-72 bg-white dark:bg-slate-900 border-slate-200 dark:border-white/10 p-2 rounded-[1.5rem] shadow-2xl mt-2 overflow-hidden">
+                    <div className="px-4 py-3 font-black text-slate-950 dark:text-white text-base tracking-tighter uppercase">My Space</div>
+                    <DropdownMenuSeparator className="bg-slate-100 dark:bg-white/5 mx-2 mb-1" />
+                    <div className="p-1 space-y-0.5">
+                      {[
+                        { href: "/profile", icon: User, label: "Profile", desc: "Edit your info" },
+                        { href: "/orders", icon: ShoppingBag, label: "My Orders", desc: "Track & manage orders" },
+                        { href: "/wallet", icon: Wallet, label: "My Wallet", desc: "₹1,250 available" },
+                        { href: "/referral", icon: Gift, label: "Refer & Earn", desc: "Earn ₹100 per referral" },
+                        { href: "/coupons", icon: Tag, label: "My Coupons", desc: "View available offers" },
+                        { href: "/notifications", icon: Bell, label: "Notifications", desc: "5 unread" },
+                        { href: "/settings", icon: Settings, label: "Settings", desc: "Language & preferences" },
+                      ].map(({ href, icon: Icon, label, desc }) => (
+                        <DropdownMenuItem key={href} asChild className="px-4 py-2.5 rounded-xl text-slate-700 dark:text-slate-300 hover:text-primary hover:bg-primary/5 cursor-pointer gap-3 font-bold transition-all h-auto">
+                          <Link href={href} className="flex items-center w-full">
+                            <div className="w-8 h-8 rounded-lg bg-slate-100 dark:bg-white/5 flex items-center justify-center text-slate-400 shrink-0">
+                              <Icon className="w-4 h-4" />
+                            </div>
+                            <div className="flex flex-col items-start ml-3">
+                              <span className="text-sm font-bold">{label}</span>
+                              <span className="text-[11px] text-slate-400 font-normal">{desc}</span>
+                            </div>
+                          </Link>
+                        </DropdownMenuItem>
+                      ))}
+                      <DropdownMenuSeparator className="bg-slate-100 dark:bg-white/5 mx-0 my-1" />
+                      <DropdownMenuItem 
+                        onClick={() => logout()}
+                        className="px-4 py-2.5 rounded-xl text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-500/10 cursor-pointer gap-3 font-black uppercase tracking-widest text-[10px] transition-all h-auto"
+                      >
+                        <div className="w-8 h-8 rounded-lg bg-red-500/10 flex items-center justify-center"><LogOut className="w-4 h-4" /></div>
+                        Sign Out
                       </DropdownMenuItem>
-                    ))}
-                    <DropdownMenuSeparator className="bg-slate-100 dark:bg-white/5 mx-0 my-1" />
-                    <DropdownMenuItem className="px-4 py-2.5 rounded-xl text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-500/10 cursor-pointer gap-3 font-black uppercase tracking-widest text-[10px] transition-all h-auto">
-                      <div className="w-8 h-8 rounded-lg bg-red-500/10 flex items-center justify-center"><LogOut className="w-4 h-4" /></div>
-                      Sign Out
-                    </DropdownMenuItem>
-                  </div>
-                </DropdownMenuContent>
-              </DropdownMenu>
+                    </div>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              )}
             </div>
           </div>
         </div>

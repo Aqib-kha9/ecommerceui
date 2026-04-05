@@ -179,6 +179,33 @@
     @apply font-sans;
     font-family: var(--font-geist-sans), system-ui, sans-serif;
   }
+  button {
+    @apply cursor-pointer;
+  }
+
+  /* Custom Scrollbar Styles */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-slate-50 dark:bg-slate-900;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-slate-300 dark:bg-slate-700 rounded-full border-[3px] border-solid border-slate-50 dark:border-slate-900;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-primary/50;
+  }
+
+  /* Firefox support */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: oklch(0.708 0 0) transparent;
+  }
 }
 
 /* ─── Multi-Font Switching ───────────────── */
