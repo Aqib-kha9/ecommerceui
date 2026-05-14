@@ -8,6 +8,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Store, ArrowRight, Phone, Mail, ChevronLeft, Sparkles, Shield, Zap, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import api from "@/lib/api";
+import { toast } from "sonner";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -52,25 +54,48 @@ export default function LoginPage() {
     if (e.key === "Backspace" && !otp[idx] && idx > 0) otpRefs.current[idx - 1]?.focus();
   };
 
-  const handleSendOtp = () => {
+  const handleSendOtp = async () => {
     if (!value) return;
     setLoading(true);
-    // Mock API call
-    setTimeout(() => {
+    try {
+      const res = await api.post("/auth/login", { 
+        [mode]: value 
+      });
+      if (res.data.status === "success") {
+        setStep("otp");
+        toast.success("OTP sent successfully!");
+        // Autofill if the backend returns it (dev mode)
+        if (res.data.otp) {
+          setOtp(res.data.otp.toString().split(""));
+        }
+      }
+    } catch (err: any) {
+      toast.error(err.response?.data?.message || "Failed to send OTP");
+    } finally {
       setLoading(false);
-      setStep("otp");
-    }, 1500);
+    }
   };
 
-  const handleVerify = () => {
-    if (otp.join("").length < 6) return;
+  const handleVerify = async () => {
+    const otpValue = otp.join("");
+    if (otpValue.length < 6) return;
     setLoading(true);
-    // Mock verification
-    setTimeout(() => {
+    try {
+      const res = await api.post("/auth/verify-otp", {
+        [mode]: value,
+        otp: otpValue
+      });
+      if (res.data.status === "success") {
+        const { token, user } = res.data.data;
+        login(token, user);
+        toast.success("Login successful!");
+        router.push("/profile");
+      }
+    } catch (err: any) {
+      toast.error(err.response?.data?.message || "Invalid OTP");
+    } finally {
       setLoading(false);
-      login("mock_token", { id: "1", phone: value, walletBalance: 0 });
-      router.push("/profile");
-    }, 1500);
+    }
   };
 
   return (

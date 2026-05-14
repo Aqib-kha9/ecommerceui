@@ -8,6 +8,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Store, ArrowRight, Eye, EyeOff, ChevronLeft, Gift, Shield, Star, Crown, CheckCircle2, Phone, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import api from "@/lib/api";
+import { toast } from "sonner";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -53,21 +55,51 @@ export default function RegisterPage() {
     if (e.key === "Backspace" && !otp[idx] && idx > 0) otpRefs.current[idx - 1]?.focus();
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     setLoading(true);
-    setTimeout(() => {
+    try {
+      const res = await api.post("/auth/register", {
+        name: form.name,
+        email: form.email,
+        phone: form.phone,
+        password: form.password,
+        referralCode: form.referral
+      });
+      if (res.data.status === "success") {
+        setStep("otp");
+        toast.success("Registration initiated! OTP sent.");
+        // Autofill if the backend returns it (dev mode)
+        if (res.data.otp) {
+          setOtp(res.data.otp.toString().split(""));
+        }
+      }
+    } catch (err: any) {
+      toast.error(err.response?.data?.message || "Registration failed");
+    } finally {
       setLoading(false);
-      setStep("otp");
-    }, 1500);
+    }
   };
 
-  const handleVerify = () => {
+  const handleVerify = async () => {
+    const otpValue = otp.join("");
+    if (otpValue.length < 6) return;
     setLoading(true);
-    setTimeout(() => {
+    try {
+      const res = await api.post("/auth/verify-otp", {
+        [mode]: mode === "phone" ? form.phone : form.email,
+        otp: otpValue
+      });
+      if (res.data.status === "success") {
+        const { token, user } = res.data.data;
+        login(token, user);
+        toast.success("Registration successful!");
+        router.push("/profile");
+      }
+    } catch (err: any) {
+      toast.error(err.response?.data?.message || "Invalid OTP");
+    } finally {
       setLoading(false);
-      login("mock_token", { id: "1", name: form.name, phone: form.phone || "0000000000", email: form.email, walletBalance: 0 });
-      router.push("/profile");
-    }, 1500);
+    }
   };
 
   const isFormValid = 
