@@ -29,7 +29,10 @@ export default function AuthModal() {
     setError("");
     setIsLoading(true);
     try {
-      await api.post("/auth/request-otp", { phone });
+      const res = await api.post("/auth/request-otp", { phone });
+      if (res.data.otp) {
+        setOtp(res.data.otp.toString());
+      }
       setStep(2);
     } catch (err: any) {
       setError(err.response?.data?.message || "Failed to send OTP. Try again.");
