@@ -1,6 +1,8 @@
 "use client";
 import Link from "next/link";
+import Image from "next/image";
 import { useState, useEffect } from "react";
+
 import {
   ShoppingCart,
   Search,
@@ -24,6 +26,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -40,38 +43,75 @@ import {
 } from "@/components/ui/sheet";
 import { useSearch } from "./SearchContext";
 import { useAuth } from "./AuthContext";
+import { useCart } from "./CartContext";
 import { motion, AnimatePresence } from "framer-motion";
 import MainSearchBar from "./MainSearchBar";
 import { cn } from "@/lib/utils";
 import MegaMenu from "./MegaMenu";
+import { useTranslations, useLocale } from "next-intl";
+import { usePathname, useRouter } from "@/i18n/routing";
 
-const navLinks = [
-  { label: "Groceries", href: "/products?category=Groceries" },
-  { label: "Beauty", href: "/products?category=Beauty" },
-  { label: "Personal Care", href: "/products?category=PersonalCare" },
-  { label: "Household", href: "/products?category=Household" },
-  { label: "Organic", href: "/products?category=Organic" },
-  { label: "Baby Care", href: "/products?category=Baby" },
-  { label: "Pharmacy", href: "/products?category=Pharmacy" },
-];
+// navLinks are now fetched from the API - see fetchCategories() below
 
 export default function Navbar() {
-  const { searchQuery, setSearchQuery, isHeroSearchVisible, setIsHeroSearchVisible } = useSearch();
-  const { isLoggedIn, logout } = useAuth();
-  const [activeCategory, setActiveCategory] = useState<string | null>(null);
+  const t = useTranslations("Navbar");
+  const locale = useLocale();
+  const router = useRouter();
+  const pathname = usePathname();
+  const { isHeroSearchVisible, setIsHeroSearchVisible } = useSearch();
+  const { isLoggedIn, openAuthModal, logout } = useAuth();
+  const { cartCount, items, cartTotal } = useCart();
+  
+  const isHomePage = pathname === "/";
+  const [navLinks, setNavLinks] = useState<{id: string; label: string; href: string}[]>([]);
+  const [activeCategory, setActiveCategory] = useState<{name: string; id: string} | null>(null);
   const [deliveryMode, setDeliveryMode] = useState<"fast" | "scheduled">("fast");
-  const [selectedLang, setSelectedLang] = useState("EN");
 
-  // setup scroll listener
+  // Fetch top-level categories from API
   useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/v1/categories`,
+          { headers: { "Accept-Language": locale } }
+        );
+        const json = await res.json();
+        if (json.status === "success") {
+          const topLevel = json.data.categories.filter((c: any) => !c.parentId);
+          setNavLinks(topLevel.map((c: any) => ({
+            id: c.id,
+            label: typeof c.name === "object" ? c.name[locale] || c.name["en"] || "" : c.name,
+            href: `/products?category=${c.slug}`
+          })));
+        }
+      } catch (e) {
+        console.error("Failed to fetch nav categories", e);
+      }
+    };
+    fetchCategories();
+  }, [locale]);
+
+  const selectedLang = locale.toUpperCase();
+
+  const handleLanguageChange = (langCode: string) => {
+    router.replace(pathname, { locale: langCode.toLowerCase() });
+  };
+
+  // Only toggle search visibility on the home page (where the hero search exists).
+  // On all other pages, always show the navbar search bar.
+  useEffect(() => {
+    if (!isHomePage) {
+      setIsHeroSearchVisible(false);
+      return;
+    }
     const handleScroll = () => {
-      // Toggle search visibility based on scroll threshold (around 200px)
       setIsHeroSearchVisible(window.scrollY <= 200);
     };
-
+    // Set initial state on mount
+    setIsHeroSearchVisible(window.scrollY <= 200);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [setIsHeroSearchVisible]);
+  }, [isHomePage, setIsHeroSearchVisible]);
 
   return (
     <header 
@@ -103,7 +143,7 @@ export default function Navbar() {
               <div className="flex items-center gap-2.5 cursor-pointer group max-w-full">
                 <div className="flex flex-col overflow-hidden">
                   <div className="flex items-center gap-1.5 leading-none mb-1">
-                    <span className="text-[11px] font-black tracking-tight text-slate-900 dark:text-white">Delivery in 30 Mins</span>
+                    <span className="text-[11px] font-black tracking-tight text-slate-900 dark:text-white">{t("delivery_in")}</span>
                     <Zap className="w-3 h-3 text-primary fill-current animate-pulse" />
                     <ChevronDown className="w-3 h-3 text-slate-400 ml-0.5" />
                   </div>
@@ -117,11 +157,9 @@ export default function Navbar() {
             {/* Mobile-only User Actions (User Icon) */}
             <div className="md:hidden flex items-center gap-2">
               {!isLoggedIn ? (
-                <Link href="/login">
-                  <Button variant="ghost" size="icon" className="w-10 h-10 rounded-full bg-slate-50 border border-slate-100 dark:bg-white/10 dark:border-white/5 text-slate-600 dark:text-slate-300 shadow-sm hover:shadow-md transition-all">
-                    <User className="w-4 h-4" />
-                  </Button>
-                </Link>
+                <Button onClick={openAuthModal} variant="ghost" size="icon" className="w-10 h-10 rounded-full bg-slate-50 border border-slate-100 dark:bg-white/10 dark:border-white/5 text-slate-600 dark:text-slate-300 shadow-sm hover:shadow-md transition-all">
+                  <User className="w-4 h-4" />
+                </Button>
               ) : (
                 <Link href="/dashboard">
                   <Avatar className="w-10 h-10 border-2 border-primary/20">
@@ -180,12 +218,16 @@ export default function Navbar() {
                       </Button>
                     }
                   />
-                  <DropdownMenuContent align="end" className="w-36 bg-white dark:bg-slate-900 border-slate-200 dark:border-white/10 rounded-2xl shadow-xl p-1.5">
-                    {[{ code: "EN", label: "English" }, { code: "HI", label: "हिन्दी" }, { code: "TE", label: "తెలుగు" }].map(lang => (
-                      <DropdownMenuItem key={lang.code} onClick={() => setSelectedLang(lang.code)}
-                        className={`text-xs font-bold cursor-pointer transition-all rounded-xl py-2.5 px-3 flex items-center justify-between ${selectedLang === lang.code ? "bg-primary/10 text-primary" : "hover:bg-primary/5 hover:text-primary"}`}>
+                   <DropdownMenuContent align="end" className="w-36 bg-white dark:bg-slate-900 border-slate-200 dark:border-white/10 rounded-2xl shadow-xl p-1.5">
+                    {[
+                      { code: "en", label: "English", display: "EN" }, 
+                      { code: "hi", label: "हिन्दी", display: "HI" }, 
+                      { code: "te", label: "తెలుగు", display: "TE" }
+                    ].map(lang => (
+                      <DropdownMenuItem key={lang.code} onClick={() => handleLanguageChange(lang.code)}
+                        className={`text-xs font-bold cursor-pointer transition-all rounded-xl py-2.5 px-3 flex items-center justify-between ${locale === lang.code ? "bg-primary/10 text-primary" : "hover:bg-primary/5 hover:text-primary"}`}>
                         <span>{lang.label}</span>
-                        {selectedLang === lang.code && <span className="text-[10px] font-black opacity-60">{lang.code}</span>}
+                        {locale === lang.code && <span className="text-[10px] font-black opacity-60">{lang.display}</span>}
                       </DropdownMenuItem>
                     ))}
                   </DropdownMenuContent>
@@ -231,14 +273,76 @@ export default function Navbar() {
                   </DropdownMenuContent>
                 </DropdownMenu>
                 
-                <Link href="/cart">
-                  <Button variant="ghost" size="icon" className="text-slate-600 dark:text-slate-400 hover:text-primary hover:bg-primary/5 relative rounded-xl h-11 w-11 transition-all group">
-                    <ShoppingCart className="w-5 h-5 group-hover:scale-110 transition-transform" />
-                    <Badge className="absolute -top-1 -right-1 min-w-[1.25rem] h-5 p-1 flex items-center justify-center bg-primary text-white text-[10px] rounded-full border-2 border-background font-black shadow-lg shadow-primary/20">
-                      3
-                    </Badge>
+                <div className="relative group">
+                  <Button 
+                    variant="ghost" 
+                    size="icon" 
+                    className="text-slate-600 dark:text-slate-400 hover:text-primary hover:bg-primary/5 relative rounded-xl h-11 w-11 transition-all group"
+                  >
+                    <Link href="/cart" className="flex items-center justify-center">
+                      <ShoppingCart className="w-5 h-5 group-hover:scale-110 transition-transform" />
+                      <AnimatePresence mode="wait">
+                        {cartCount > 0 && (
+                          <motion.div
+                            key={cartCount}
+                            initial={{ scale: 0.5, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            exit={{ scale: 0.5, opacity: 0 }}
+                            transition={{ type: "spring", stiffness: 500, damping: 15 }}
+                            className="absolute -top-1 -right-1 min-w-[1.25rem] h-5 p-1 flex items-center justify-center bg-primary text-white text-[10px] rounded-full border-2 border-background font-black shadow-lg shadow-primary/20"
+                          >
+                            {cartCount}
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </Link>
                   </Button>
-                </Link>
+
+                  {/* Mini Cart Preview on Hover */}
+                  <AnimatePresence>
+                    {cartCount > 0 && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                        className="absolute right-0 top-full mt-2 w-80 bg-white dark:bg-slate-900 border border-slate-100 dark:border-white/10 rounded-3xl shadow-2xl p-4 hidden group-hover:block z-[60]"
+                      >
+                        <div className="flex items-center justify-between mb-4 px-1">
+                          <span className="font-black text-xs uppercase tracking-widest text-slate-400">Your Cart</span>
+                          <span className="text-[10px] font-bold text-primary bg-primary/10 px-2 py-0.5 rounded-full">{cartCount} Items</span>
+                        </div>
+                        
+                        <div className="max-h-60 overflow-y-auto no-scrollbar space-y-3 mb-4">
+                          {items.map((item) => (
+                            <div key={item.id} className="flex gap-3 p-2 rounded-2xl hover:bg-slate-50 dark:hover:bg-white/5 transition-colors">
+                              <div className="relative w-12 h-12 rounded-xl overflow-hidden bg-slate-100 shrink-0">
+                                <Image src={item.image || "/placeholder.png"} alt={item.name} fill className="object-cover" />
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <p className="text-[11px] font-black text-slate-900 dark:text-white truncate">{item.name}</p>
+                                <p className="text-[10px] font-bold text-slate-500 mt-0.5">{item.quantity} x ₹{item.price}</p>
+                              </div>
+                              <p className="text-[10px] font-black text-slate-900 dark:text-white">₹{item.price * item.quantity}</p>
+                            </div>
+                          ))}
+                        </div>
+
+                        <Separator className="bg-slate-100 dark:bg-white/5 mb-4" />
+                        
+                        <div className="flex items-center justify-between mb-4 px-1">
+                          <span className="text-[10px] font-black uppercase text-slate-400">Total</span>
+                          <span className="text-base font-black text-slate-950 dark:text-white tracking-tight">₹{cartTotal.toLocaleString()}</span>
+                        </div>
+
+                        <Link href="/cart">
+                          <Button className="w-full bg-primary hover:opacity-90 text-white rounded-xl h-12 text-[10px] font-black uppercase tracking-widest border-none shadow-lg shadow-primary/20">
+                            Check View Full Cart
+                          </Button>
+                        </Link>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
               </div>
 
               <div className="w-[1px] h-6 bg-slate-200 dark:bg-white/10 mx-2" />
@@ -246,16 +350,12 @@ export default function Navbar() {
               {/* User Account Section (Desktop) */}
               {!isLoggedIn ? (
                 <div className="flex items-center gap-2">
-                  <Link href="/login">
-                    <Button variant="ghost" className="text-xs font-black uppercase tracking-widest text-slate-600 dark:text-slate-400 hover:text-primary transition-all px-4 h-11 rounded-xl">
-                      Login
-                    </Button>
-                  </Link>
-                  <Link href="/register">
-                    <Button className="bg-primary text-white text-xs font-black uppercase tracking-widest px-5 h-11 rounded-xl shadow-lg shadow-primary/20 hover:shadow-primary/40 transition-all hover:scale-[1.02] active:scale-95">
-                      Join Elite
-                    </Button>
-                  </Link>
+                  <Button onClick={openAuthModal} variant="ghost" className="text-xs font-black uppercase tracking-widest text-slate-600 dark:text-slate-400 hover:text-primary transition-all px-4 h-11 rounded-xl">
+                    {t("login")}
+                  </Button>
+                  <Button onClick={openAuthModal} className="bg-primary text-white text-xs font-black uppercase tracking-widest px-5 h-11 rounded-xl shadow-lg shadow-primary/20 hover:shadow-primary/40 transition-all hover:scale-[1.02] active:scale-95">
+                    {t("join_elite")}
+                  </Button>
                 </div>
               ) : (
                 <DropdownMenu>
@@ -268,23 +368,23 @@ export default function Navbar() {
                         <AvatarFallback className="bg-primary text-white text-xs font-black">RK</AvatarFallback>
                       </Avatar>
                       <div className="flex flex-col items-start leading-none hidden sm:flex">
-                        <span className="text-[11px] font-black uppercase tracking-widest text-slate-400">Account</span>
+                        <span className="text-[11px] font-black uppercase tracking-widest text-slate-400">{t("account")}</span>
                         <span className="text-xs font-bold text-slate-900 dark:text-white">Ravi Kumar</span>
                       </div>
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="w-72 bg-white dark:bg-slate-900 border-slate-200 dark:border-white/10 p-2 rounded-[1.5rem] shadow-2xl mt-2 overflow-hidden">
-                    <div className="px-4 py-3 font-black text-slate-950 dark:text-white text-base tracking-tighter uppercase">My Space</div>
+                    <div className="px-4 py-3 font-black text-slate-950 dark:text-white text-base tracking-tighter uppercase">{t("my_space")}</div>
                     <DropdownMenuSeparator className="bg-slate-100 dark:bg-white/5 mx-2 mb-1" />
                     <div className="p-1 space-y-0.5">
                       {[
-                        { href: "/profile", icon: User, label: "Profile", desc: "Edit your info" },
-                        { href: "/orders", icon: ShoppingBag, label: "My Orders", desc: "Track & manage orders" },
-                        { href: "/wallet", icon: Wallet, label: "My Wallet", desc: "₹1,250 available" },
-                        { href: "/referral", icon: Gift, label: "Refer & Earn", desc: "Earn ₹100 per referral" },
-                        { href: "/coupons", icon: Tag, label: "My Coupons", desc: "View available offers" },
-                        { href: "/notifications", icon: Bell, label: "Notifications", desc: "5 unread" },
-                        { href: "/settings", icon: Settings, label: "Settings", desc: "Language & preferences" },
+                        { href: "/profile", icon: User, label: t("profile"), desc: "Edit your info" },
+                        { href: "/orders", icon: ShoppingBag, label: t("my_orders"), desc: "Track & manage orders" },
+                        { href: "/wallet", icon: Wallet, label: t("my_wallet"), desc: "₹1,250 available" },
+                        { href: "/referral", icon: Gift, label: t("refer_earn"), desc: "Earn ₹100 per referral" },
+                        { href: "/coupons", icon: Tag, label: t("my_coupons"), desc: "View available offers" },
+                        { href: "/notifications", icon: Bell, label: t("notifications"), desc: "5 unread" },
+                        { href: "/settings", icon: Settings, label: t("settings"), desc: "Language & preferences" },
                       ].map(({ href, icon: Icon, label, desc }) => (
                         <DropdownMenuItem key={href} asChild className="px-4 py-2.5 rounded-xl text-slate-700 dark:text-slate-300 hover:text-primary hover:bg-primary/5 cursor-pointer gap-3 font-bold transition-all h-auto">
                           <Link href={href} className="flex items-center w-full">
@@ -304,7 +404,7 @@ export default function Navbar() {
                         className="px-4 py-2.5 rounded-xl text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-500/10 cursor-pointer gap-3 font-black uppercase tracking-widest text-[10px] transition-all h-auto"
                       >
                         <div className="w-8 h-8 rounded-lg bg-red-500/10 flex items-center justify-center"><LogOut className="w-4 h-4" /></div>
-                        Sign Out
+                        {t("sign_out")}
                       </DropdownMenuItem>
                     </div>
                   </DropdownMenuContent>
@@ -315,38 +415,40 @@ export default function Navbar() {
         </div>
 
         {/* Mobile Horizontal Categories Scroll */}
-        <div className="md:hidden w-full bg-gradient-to-b from-white to-slate-50/50 dark:from-slate-950 dark:to-slate-900 border-t border-slate-100 dark:border-white/5">
-          <nav className="flex items-center gap-2.5 overflow-x-auto no-scrollbar py-3 px-3">
-            {navLinks.map((link) => (
-              <Link 
-                key={link.label} 
-                href={link.href} 
-                className="group relative flex items-center justify-center px-4 py-2 rounded-xl bg-white dark:bg-slate-800/50 border border-slate-200/60 dark:border-white/10 shadow-[0_2px_8px_-2px_rgba(0,0,0,0.05)] shrink-0 transition-all duration-300 hover:border-primary/40 hover:shadow-primary/10 active:scale-95 overflow-hidden"
-              >
-                <div className="absolute inset-0 bg-gradient-to-r from-primary/0 via-primary/5 to-primary/0 opacity-0 group-hover:opacity-100 transition-opacity" />
-                <span className="text-[11px] font-bold tracking-wide text-slate-700 dark:text-slate-300 group-hover:text-primary transition-colors whitespace-nowrap relative z-10">
-                  {link.label}
-                </span>
-              </Link>
-            ))}
-          </nav>
-        </div>
+        {!isHomePage && pathname === "/products" ? null : (
+          <div className="md:hidden w-full bg-gradient-to-b from-white to-slate-50/50 dark:from-slate-950 dark:to-slate-900 border-t border-slate-100 dark:border-white/5">
+            <nav className="flex items-center gap-2.5 overflow-x-auto no-scrollbar py-3 px-3">
+              {navLinks.map((link) => (
+                <Link 
+                  key={link.label} 
+                  href={link.href} 
+                  className="group relative flex items-center justify-center px-4 py-2 rounded-xl bg-white dark:bg-slate-800/50 border border-slate-200/60 dark:border-white/10 shadow-[0_2px_8px_-2px_rgba(0,0,0,0.05)] shrink-0 transition-all duration-300 hover:border-primary/40 hover:shadow-primary/10 active:scale-95 overflow-hidden"
+                >
+                  <div className="absolute inset-0 bg-gradient-to-r from-primary/0 via-primary/5 to-primary/0 opacity-0 group-hover:opacity-100 transition-opacity" />
+                  <span className="text-[11px] font-bold tracking-wide text-slate-700 dark:text-slate-300 group-hover:text-primary transition-colors whitespace-nowrap relative z-10">
+                    {link.label}
+                  </span>
+                </Link>
+              ))}
+            </nav>
+          </div>
+        )}
 
         {/* Desktop Secondary Nav (Categories) */}
         <nav className="hidden md:flex items-center justify-center gap-10 border-t border-slate-100 dark:border-white/5">
           {navLinks.map((link) => (
-            <div key={link.label} onMouseEnter={() => setActiveCategory(link.label)} className="py-3">
+            <div key={link.label} onMouseEnter={() => setActiveCategory({name: link.label, id: link.id})} className="py-3">
               <Link 
                 href={link.href} 
                 className={cn(
-                  "text-[11px] text-slate-500 hover:text-primary transition-all font-black uppercase tracking-widest flex items-center gap-1 group relative", 
-                  activeCategory === link.label && "text-primary"
+                  "text-[12px] text-slate-600 dark:text-slate-400 hover:text-primary transition-all font-black uppercase tracking-[0.1em] flex items-center gap-1 group relative pb-1", 
+                  activeCategory?.name === link.label && "text-primary"
                 )}
               >
                 {link.label}
                 <span className={cn(
                   "absolute -bottom-[1px] left-0 w-full h-[2px] bg-primary transition-all duration-300", 
-                  activeCategory === link.label ? "opacity-100 scale-x-100" : "opacity-0 scale-x-0"
+                  activeCategory?.name === link.label ? "opacity-100 scale-x-100" : "opacity-0 scale-x-0"
                 )} />
               </Link>
             </div>
@@ -358,7 +460,8 @@ export default function Navbar() {
       <AnimatePresence>
         {activeCategory && (
           <MegaMenu 
-            category={activeCategory as string} 
+            category={activeCategory.name}
+            categoryId={activeCategory.id}
             isOpen={!!activeCategory} 
           />
         )}

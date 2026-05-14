@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
@@ -11,54 +11,74 @@ import {
   Search, LayoutDashboard, ChevronDown, Zap,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-
-/* ─── Nav structure ───────────────────────────── */
-const navGroups = [
-  {
-    title: "Account",
-    items: [
-      { href: "/dashboard",          icon: LayoutDashboard, label: "Dashboard",      badge: null },
-      { href: "/profile",            icon: User,            label: "Profile Info",   badge: null },
-      { href: "/profile/addresses",  icon: MapPin,          label: "Addresses",      badge: null },
-    ],
-  },
-  {
-    title: "Activities",
-    items: [
-      { href: "/orders",   icon: ShoppingBag, label: "My Orders",   badge: "3" },
-      { href: "/coupons",  icon: Tag,         label: "Coupons",     badge: "5" },
-    ],
-  },
-  {
-    title: "Wallet & Referral",
-    items: [
-      { href: "/wallet",   icon: Wallet, label: "My Wallet",       badge: "₹1,250" },
-      { href: "/referral", icon: Gift,   label: "Refer & Earn",    badge: null },
-    ],
-  },
-  {
-    title: "Support",
-    items: [
-      { href: "/notifications", icon: Bell,     label: "Notifications",     badge: "5" },
-      { href: "/settings",      icon: Settings, label: "Language Settings", badge: null },
-    ],
-  },
-];
-
-const mobileNav = [
-  { href: "/dashboard",    icon: LayoutDashboard, label: "Home" },
-  { href: "/orders",       icon: ShoppingBag,     label: "Orders" },
-  { href: "/wallet",       icon: Wallet,          label: "Wallet" },
-  { href: "/packages",     icon: Package,         label: "Packages" },
-  { href: "/profile",      icon: User,            label: "Account" },
-];
+import api from "@/lib/api";
 
 /* ─── Helpers ─────────────────────────────────── */
 interface UserLayoutProps { children: React.ReactNode; title: string; subtitle?: string; }
 
+import { useAuth } from "@/components/AuthContext";
+import { useTranslations } from "next-intl";
+
 export default function UserLayout({ children, title, subtitle }: UserLayoutProps) {
+  const t = useTranslations("Navbar");
+  const { user, logout } = useAuth();
   const pathname  = usePathname();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [stats, setStats] = useState<any>(null);
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const res = await api.get("/users/me/stats");
+        if (res.data.status === "success") {
+          setStats(res.data.data.stats);
+        }
+      } catch (err) {
+        console.error("Layout stats fetch failed", err);
+      }
+    };
+    if (user) fetchStats();
+  }, [user]);
+
+  const navGroups = [
+    {
+      title: "Account",
+      items: [
+        { href: "/dashboard",          icon: LayoutDashboard, label: "Dashboard",      badge: null },
+        { href: "/profile",            icon: User,            label: "Profile Info",   badge: null },
+        { href: "/profile/addresses",  icon: MapPin,          label: "Addresses",      badge: null },
+      ],
+    },
+    {
+      title: "Activities",
+      items: [
+        { href: "/orders",   icon: ShoppingBag, label: "My Orders",   badge: stats?.orderCount > 0 ? stats.orderCount.toString() : null },
+        { href: "/coupons",  icon: Tag,         label: "Coupons",     badge: stats?.couponCount > 0 ? stats.couponCount.toString() : null },
+      ],
+    },
+    {
+      title: "Wallet & Referral",
+      items: [
+        { href: "/wallet",   icon: Wallet, label: "My Wallet",       badge: stats?.walletBalance > 0 ? `₹${Number(stats.walletBalance).toLocaleString()}` : null },
+        { href: "/referral", icon: Gift,   label: "Refer & Earn",    badge: stats?.referralCount > 0 ? stats.referralCount.toString() : null },
+      ],
+    },
+    {
+      title: "Support",
+      items: [
+        { href: "/notifications", icon: Bell,     label: "Notifications",     badge: "5" },
+        { href: "/settings",      icon: Settings, label: "Language Settings", badge: null },
+      ],
+    },
+  ];
+
+  const mobileNav = [
+    { href: "/dashboard",    icon: LayoutDashboard, label: "Home" },
+    { href: "/orders",       icon: ShoppingBag,     label: "Orders" },
+    { href: "/wallet",       icon: Wallet,          label: "Wallet" },
+    { href: "/packages",     icon: Package,         label: "Packages" },
+    { href: "/profile",      icon: User,            label: "Account" },
+  ];
 
   const isActive = (href: string, exact?: boolean) =>
     exact ? pathname === href : pathname === href || pathname.startsWith(href + "/");
@@ -90,7 +110,7 @@ export default function UserLayout({ children, title, subtitle }: UserLayoutProp
 
         {/* Page breadcrumb (desktop) */}
         <div className="hidden lg:flex items-center gap-1.5 text-sm">
-          <span className="text-slate-400 font-medium">Dashboard</span>
+          <span className="text-slate-400 font-medium">{t("my_space") || "Dashboard"}</span>
           <ChevronRight className="w-3.5 h-3.5 text-slate-300" />
           <span className="font-bold text-slate-700 dark:text-slate-200">{title}</span>
         </div>
@@ -103,13 +123,13 @@ export default function UserLayout({ children, title, subtitle }: UserLayoutProp
         {/* Search (desktop) */}
         <div className="hidden md:flex items-center gap-2 h-9 px-4 bg-slate-100 dark:bg-white/5 rounded-xl border border-slate-200 dark:border-white/8 text-slate-400 text-sm w-48 cursor-pointer hover:border-primary/40 transition-colors">
           <Search className="w-4 h-4 shrink-0" />
-          <span className="font-medium text-xs">Search...</span>
+          <span className="font-medium text-xs">{t("search_placeholder") ? (t("search_placeholder").slice(0, 10) + "...") : "Search..."}</span>
         </div>
 
         {/* Back to shop */}
         <Link href="/"
           className="hidden sm:flex items-center gap-1.5 h-9 px-4 rounded-xl bg-slate-100 dark:bg-white/5 text-slate-500 dark:text-slate-400 text-xs font-bold hover:bg-primary/10 hover:text-primary border border-slate-200 dark:border-white/8 transition-all">
-          <Home className="w-3.5 h-3.5" /> Shop
+          <Home className="w-3.5 h-3.5" /> {t("shop") || "Shop"}
         </Link>
 
         {/* Notifications */}
@@ -122,11 +142,11 @@ export default function UserLayout({ children, title, subtitle }: UserLayoutProp
         {/* User avatar */}
         <div className="flex items-center gap-2.5 pl-2 border-l border-slate-200 dark:border-white/8 ml-1 cursor-pointer group">
           <div className="w-8 h-8 rounded-xl overflow-hidden ring-2 ring-primary/20">
-            <Image src="https://api.dicebear.com/7.x/avataaars/svg?seed=Ravi" alt="User" width={32} height={32} className="object-cover w-full h-full" />
+            <Image src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${user?.name || 'Guest'}`} alt="User" width={32} height={32} className="object-cover w-full h-full" />
           </div>
           <div className="hidden sm:block">
-            <p className="font-black text-[12px] text-slate-900 dark:text-white leading-none">Ravi Kumar</p>
-            <p className="text-[10px] text-slate-400 font-medium leading-none mt-0.5">Premium</p>
+            <p className="font-black text-[12px] text-slate-900 dark:text-white leading-none">{user?.name || "Guest User"}</p>
+            <p className="text-[10px] text-slate-400 font-medium leading-none mt-0.5">Premium Account</p>
           </div>
           <ChevronDown className="w-3.5 h-3.5 text-slate-400 hidden sm:block" />
         </div>
@@ -143,10 +163,13 @@ export default function UserLayout({ children, title, subtitle }: UserLayoutProp
           <nav className="flex-1 px-3 py-3 space-y-4 overflow-y-auto">
             {navGroups.map((group) => (
               <div key={group.title}>
-                <p className="text-[9px] font-black uppercase tracking-[0.18em] text-slate-400 px-2 mb-1">{group.title}</p>
+                <p className="text-[9px] font-black uppercase tracking-[0.18em] text-slate-400 px-2 mb-1">
+                  {t(group.title.toLowerCase().replace(/ /g, "_")) || group.title}
+                </p>
                 <div className="space-y-0.5">
                   {group.items.map(({ href, icon: Icon, label, badge }) => {
                     const active = isActive(href);
+                    const localizedLabel = t(label.toLowerCase().replace(/ /g, "_")) || label
                     return (
                       <Link key={href} href={href}
                         className={`flex items-center justify-between px-3 py-2.5 rounded-xl transition-all group ${
@@ -156,7 +179,7 @@ export default function UserLayout({ children, title, subtitle }: UserLayoutProp
                         }`}>
                         <div className="flex items-center gap-2.5">
                           <Icon className={`w-4 h-4 shrink-0 ${active ? "text-white" : "text-slate-400 group-hover:text-primary transition-colors"}`} />
-                          <span className={`text-[13px] font-bold ${active ? "text-white" : ""}`}>{label}</span>
+                          <span className={`text-[13px] font-bold ${active ? "text-white" : ""}`}>{localizedLabel}</span>
                         </div>
                         {badge && (
                           <Badge className={`text-[10px] font-black border-0 rounded-full px-2 ${active ? "bg-white/20 text-white" : "bg-primary/10 text-primary"}`}>
@@ -173,9 +196,12 @@ export default function UserLayout({ children, title, subtitle }: UserLayoutProp
 
           {/* Sign out */}
           <div className="p-3 border-t border-slate-100 dark:border-white/[0.05]">
-            <button className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition-all group">
+            <button 
+              onClick={logout}
+              className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition-all group"
+            >
               <LogOut className="w-4 h-4" />
-              <span className="text-[13px] font-bold">Sign Out</span>
+              <span className="text-[13px] font-bold">{t("sign_out")}</span>
             </button>
           </div>
         </aside>
@@ -204,10 +230,13 @@ export default function UserLayout({ children, title, subtitle }: UserLayoutProp
                 <nav className="flex-1 px-3 py-3 space-y-4 overflow-y-auto">
                   {navGroups.map((group) => (
                     <div key={group.title}>
-                      <p className="text-[9px] font-black uppercase tracking-[0.18em] text-slate-400 px-2 mb-1">{group.title}</p>
+                      <p className="text-[9px] font-black uppercase tracking-[0.18em] text-slate-400 px-2 mb-1">
+                        {t(group.title.toLowerCase()) || group.title}
+                      </p>
                       <div className="space-y-0.5">
                         {group.items.map(({ href, icon: Icon, label, badge }) => {
                           const active = isActive(href);
+                          const localizedLabel = t(label.toLowerCase().replace(/ /g, "_")) || label
                           return (
                             <Link key={href} href={href} onClick={() => setSidebarOpen(false)}
                               className={`flex items-center justify-between px-3 py-3 rounded-xl transition-all ${
@@ -215,7 +244,7 @@ export default function UserLayout({ children, title, subtitle }: UserLayoutProp
                               }`}>
                               <div className="flex items-center gap-3">
                                 <Icon className={`w-4 h-4 ${active ? "text-white" : "text-slate-400"}`} />
-                                <span className="text-[14px] font-bold">{label}</span>
+                                <span className="text-[14px] font-bold">{localizedLabel}</span>
                               </div>
                               {badge && <Badge className={`text-[10px] font-black border-0 rounded-full ${active ? "bg-white/20 text-white" : "bg-primary/10 text-primary"}`}>{badge}</Badge>}
                             </Link>
@@ -227,7 +256,7 @@ export default function UserLayout({ children, title, subtitle }: UserLayoutProp
                 </nav>
                 <div className="p-3 border-t border-slate-100 dark:border-white/[0.05]">
                   <button className="w-full flex items-center gap-3 px-3 py-3 rounded-xl text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10">
-                    <LogOut className="w-4 h-4" /><span className="text-[14px] font-bold">Sign Out</span>
+                    <LogOut className="w-4 h-4" /><span className="text-[14px] font-bold">{t("sign_out")}</span>
                   </button>
                 </div>
               </motion.aside>
@@ -246,7 +275,7 @@ export default function UserLayout({ children, title, subtitle }: UserLayoutProp
               </div>
               <div className="flex items-center gap-2">
                 <Link href="/packages" className="hidden sm:flex items-center gap-1.5 h-8 px-3 rounded-xl bg-primary text-white text-xs font-black shadow-lg shadow-primary/25 hover:opacity-90 transition-opacity">
-                  <ShoppingBag className="w-3.5 h-3.5" /> Shop Now
+                  <ShoppingBag className="w-3.5 h-3.5" /> {t("MegaMenu.shop_now") || "Shop Now"}
                 </Link>
               </div>
             </div>

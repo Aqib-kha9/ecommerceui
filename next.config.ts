@@ -1,6 +1,16 @@
 import type { NextConfig } from "next";
 
+import createNextIntlPlugin from 'next-intl/plugin';
+
+const withNextIntl = createNextIntlPlugin();
+
 const nextConfig: NextConfig = {
+  // @ts-ignore
+  turbopack: {
+    resolveAlias: {
+      "next-intl/config": "./src/i18n/request.ts",
+    },
+  },
   images: {
     remotePatterns: [
       {
@@ -19,8 +29,12 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "static.cdnlogo.com",
       },
+      {
+        protocol: "https",
+        hostname: "res.cloudinary.com",
+      },
     ],
   },
 };
 
-export default nextConfig;
+export default withNextIntl(nextConfig);

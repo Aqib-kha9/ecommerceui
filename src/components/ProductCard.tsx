@@ -6,6 +6,9 @@ import Link from "next/link";
 import { Heart, Zap, Truck, ShoppingCart } from "lucide-react";
 import { Product } from "@/lib/data";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "./AuthContext";
+import { useCart } from "./CartContext";
+import { useTranslations } from "next-intl";
 
 export default function ProductCard({ 
   product, 
@@ -14,6 +17,9 @@ export default function ProductCard({
   product: Product, 
   layout?: "square" | "horizontal" 
 }) {
+  const t = useTranslations("Products");
+  const { isLoggedIn, openAuthModal } = useAuth();
+  const { addToCart } = useCart();
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [isLiked, setIsLiked] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -30,6 +36,12 @@ export default function ProductCard({
         setActiveImageIndex(newIndex);
       }
     }
+  };
+
+  const handleAddToCart = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    addToCart(product, 1);
   };
 
   if (layout === "horizontal") {
@@ -97,7 +109,7 @@ export default function ProductCard({
 
           <Link href={`/products/${product.id}`}>
             <h4 className="text-[11px] font-black text-slate-900 dark:text-white leading-[1.1] mb-1 tracking-tight line-clamp-2 min-h-[1.5rem] hover:text-primary transition-colors">
-              {product.name} {product.itemsCount ? `(${product.itemsCount} Items)` : ''}
+              {product.name} {product.itemsCount ? `(${product.itemsCount} ${t("items")})` : ''}
             </h4>
           </Link>
 
@@ -120,17 +132,18 @@ export default function ProductCard({
                 <div className="flex items-center gap-1 mt-0.5">
                   <span className="text-[7px] text-slate-400 font-bold line-through">₹{product.originalPrice.toLocaleString()}</span>
                   <span className="text-[6px] font-black text-primary">
-                    {Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)}% OFF
+                    {Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)}% {t("off")}
                   </span>
                 </div>
               )}
             </div>
             
             <Button 
+              onClick={handleAddToCart}
               className="h-6 px-2 bg-slate-950 dark:bg-white text-white dark:text-slate-900 hover:bg-primary dark:hover:bg-primary hover:text-white dark:hover:text-white rounded-full text-[7px] font-black uppercase tracking-widest transition-all shadow-md active:scale-95 border-none"
               disabled={!product.inStock}
             >
-              {product.inStock ? 'ADD' : 'OUT'}
+              {product.inStock ? t("add") : t("out")}
             </Button>
           </div>
         </div>
@@ -204,7 +217,7 @@ export default function ProductCard({
 
         <Link href={`/products/${product.id}`}>
           <h4 className="text-[11px] md:text-[13px] font-black text-slate-900 dark:text-white leading-[1.2] mb-1.5 md:mb-2 tracking-tight line-clamp-2 min-h-[2.4rem] hover:text-primary transition-colors">
-            {product.name} {product.itemsCount ? `(${product.itemsCount} Items)` : ''}
+            {product.name} {product.itemsCount ? `(${product.itemsCount} ${t("items")})` : ''}
           </h4>
         </Link>
 
@@ -223,10 +236,11 @@ export default function ProductCard({
             </div>
             
             <button 
+              onClick={handleAddToCart}
               className="h-7 px-3 bg-white dark:bg-slate-900 text-primary border border-primary/20 hover:bg-primary hover:text-white rounded-lg text-[10px] font-black uppercase tracking-tight transition-all shadow-sm active:scale-95 flex items-center gap-1 group/btn"
               disabled={!product.inStock}
             >
-              {product.inStock ? 'ADD' : 'OUT'}
+              {product.inStock ? t("add") : t("out")}
               <span className="text-lg leading-none group-hover/btn:translate-x-0.5 transition-transform">+</span>
             </button>
           </div>

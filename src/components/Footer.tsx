@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ColorSwitcher } from "./ColorSwitcher";
 import { useTheme } from "next-themes";
+import { useTranslations } from "next-intl";
 
 const footerLinks = {
   Shop: [
@@ -58,6 +59,7 @@ const AppearanceSettings = () => {
 };
 
 export default function Footer() {
+  const t = useTranslations("Footer");
   return (
     <footer className="bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 text-slate-500 dark:text-slate-400 mt-20">
       <div className="container mx-auto px-4 py-10 md:py-16">
@@ -73,19 +75,19 @@ export default function Footer() {
               </span>
             </Link>
             <p className="text-sm font-medium leading-relaxed mb-8 max-w-sm text-slate-500 dark:text-slate-400">
-              Premium FMCG delivery for the modern household. Quality groceries and essentials curated for your lifestyle.
+              {t("about_us")}
             </p>
             {/* Newsletter */}
             <div className="mb-8 max-w-sm">
               <p className="text-sm font-semibold text-slate-900 dark:text-white mb-3 flex items-center gap-2">
-                <Mail className="w-4 h-4 text-primary" /> Newsletter
+                <Mail className="w-4 h-4 text-primary" /> {t("newsletter")}
               </p>
               <div className="flex flex-col sm:flex-row gap-2">
                 <Input
-                  placeholder="Enter your email"
+                  placeholder={t("newsletter_placeholder")}
                   className="bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder:text-slate-500 focus:border-primary text-sm h-11 rounded-xl shadow-sm w-full"
                 />
-                <Button className="bg-primary text-primary-foreground hover:opacity-90 shrink-0 h-11 px-6 font-black uppercase tracking-widest text-[10px] rounded-xl shadow-lg shadow-primary/20 active:scale-95 transition-all w-full sm:w-auto">Subscribe</Button>
+                <Button className="bg-primary text-primary-foreground hover:opacity-90 shrink-0 h-11 px-6 font-black uppercase tracking-widest text-[10px] rounded-xl shadow-lg shadow-primary/20 active:scale-95 transition-all w-full sm:w-auto">{t("subscribe")}</Button>
               </div>
             </div>
             {/* Socials */}
@@ -101,7 +103,7 @@ export default function Footer() {
           {/* Links */}
           {Object.entries(footerLinks).map(([section, links]) => (
             <div key={section} className="col-span-1">
-              <p className="font-black text-slate-900 dark:text-white mb-4 md:mb-6 text-[11px] md:text-xs uppercase tracking-[0.2em]">{section}</p>
+              <p className="font-black text-slate-900 dark:text-white mb-4 md:mb-6 text-[11px] md:text-xs uppercase tracking-[0.2em]">{t(section.toLowerCase())}</p>
               <ul className="space-y-3">
                 {links.map((link) => (
                   <li key={link.label}>
@@ -121,10 +123,10 @@ export default function Footer() {
           <div className="flex flex-col items-center gap-4 text-[10px] font-black uppercase tracking-[0.2em]">
              <AppearanceSettings />
             <div className="flex flex-wrap justify-center gap-4 sm:gap-8 mt-4">
-              <Link href="#" className="text-slate-400 dark:text-slate-600 hover:text-primary transition-colors">Privacy Policy</Link>
-              <Link href="#" className="text-slate-400 dark:text-slate-600 hover:text-primary transition-colors">Terms of Service</Link>
+              <Link href="#" className="text-slate-400 dark:text-slate-600 hover:text-primary transition-colors">{t("privacy_policy")}</Link>
+              <Link href="#" className="text-slate-400 dark:text-slate-600 hover:text-primary transition-colors">{t("terms_of_service")}</Link>
             </div>
-            <p className="text-slate-400 dark:text-slate-600 mt-2">© 2024 Ayur Pooja. All rights reserved.</p>
+            <p className="text-slate-400 dark:text-slate-600 mt-2">© 2024 Ayur Pooja. {t("all_rights_reserved")}</p>
           </div>
         </div>
       </div>
