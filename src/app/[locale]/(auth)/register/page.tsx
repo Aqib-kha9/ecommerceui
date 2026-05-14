@@ -58,23 +58,19 @@ export default function RegisterPage() {
   const handleSubmit = async () => {
     setLoading(true);
     try {
-      const res = await api.post("/auth/register", {
-        name: form.name,
-        email: form.email,
-        phone: form.phone,
-        password: form.password,
-        referralCode: form.referral
-      });
+      const phoneToUse = form.phone || "";
+      const res = await api.post("/auth/request-otp", { phone: phoneToUse });
       if (res.data.status === "success") {
         setStep("otp");
-        toast.success("Registration initiated! OTP sent.");
-        // Autofill if the backend returns it (dev mode)
+        toast.success("OTP sent! Check your phone.");
+        // Autofill OTP from response (remove once SMS gateway is integrated)
         if (res.data.otp) {
-          setOtp(res.data.otp.toString().split(""));
+          const digits = res.data.otp.toString().padStart(6, "0").split("");
+          setOtp(digits);
         }
       }
     } catch (err: any) {
-      toast.error(err.response?.data?.message || "Registration failed");
+      toast.error(err.response?.data?.message || "Registration failed. Try again.");
     } finally {
       setLoading(false);
     }
@@ -82,21 +78,23 @@ export default function RegisterPage() {
 
   const handleVerify = async () => {
     const otpValue = otp.join("");
-    if (otpValue.length < 6) return;
+    if (otpValue.length < 4) return;
     setLoading(true);
     try {
+      // verify-otp registers user if not exists, passing name & email
       const res = await api.post("/auth/verify-otp", {
-        [mode]: mode === "phone" ? form.phone : form.email,
-        otp: otpValue
+        phone: form.phone,
+        otp: otpValue,
+        name: form.name,
+        email: form.email || undefined
       });
       if (res.data.status === "success") {
-        const { token, user } = res.data.data;
-        login(token, user);
-        toast.success("Registration successful!");
-        router.push("/profile");
+        login(res.data.token, res.data.data.user);
+        toast.success("Account created! Welcome to AyurPooja 🎉");
+        router.push("/");
       }
     } catch (err: any) {
-      toast.error(err.response?.data?.message || "Invalid OTP");
+      toast.error(err.response?.data?.message || "Invalid OTP. Please try again.");
     } finally {
       setLoading(false);
     }

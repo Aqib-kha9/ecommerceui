@@ -58,19 +58,18 @@ export default function LoginPage() {
     if (!value) return;
     setLoading(true);
     try {
-      const res = await api.post("/auth/login", { 
-        [mode]: value 
-      });
+      const res = await api.post("/auth/request-otp", { phone: value });
       if (res.data.status === "success") {
         setStep("otp");
-        toast.success("OTP sent successfully!");
-        // Autofill if the backend returns it (dev mode)
+        toast.success("OTP sent! Check your phone.");
+        // Autofill OTP from response (remove once SMS gateway is integrated)
         if (res.data.otp) {
-          setOtp(res.data.otp.toString().split(""));
+          const digits = res.data.otp.toString().padStart(6, "0").split("");
+          setOtp(digits);
         }
       }
     } catch (err: any) {
-      toast.error(err.response?.data?.message || "Failed to send OTP");
+      toast.error(err.response?.data?.message || "Failed to send OTP. Try again.");
     } finally {
       setLoading(false);
     }
@@ -78,21 +77,21 @@ export default function LoginPage() {
 
   const handleVerify = async () => {
     const otpValue = otp.join("");
-    if (otpValue.length < 6) return;
+    if (otpValue.length < 4) return;
     setLoading(true);
     try {
       const res = await api.post("/auth/verify-otp", {
-        [mode]: value,
+        phone: value,
         otp: otpValue
       });
       if (res.data.status === "success") {
-        const { token, user } = res.data.data;
-        login(token, user);
-        toast.success("Login successful!");
-        router.push("/profile");
+        // Backend returns token at top level, user inside data
+        login(res.data.token, res.data.data.user);
+        toast.success("Welcome back! 🎉");
+        router.push("/");
       }
     } catch (err: any) {
-      toast.error(err.response?.data?.message || "Invalid OTP");
+      toast.error(err.response?.data?.message || "Invalid OTP. Please try again.");
     } finally {
       setLoading(false);
     }
